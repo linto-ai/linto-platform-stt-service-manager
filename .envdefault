@@ -3,10 +3,10 @@ COMPONENTS = WebServer,LinSTT,ClusterManager,IngressController
 WEBSERVER_HTTP_PORT=8000
 
 # File system
-FILESYSTEM=/home/ilyes/Documents/github/model/
+FILESYSTEM=/path/to/your/model/storage
 
 # Docker configuration paths
-SAVE_PATH=/home/ilyes/Documents/github/model/
+SAVE_PATH=/path/to/your/model/storage
 TEMP_FOLDER_NAME=tmp
 LM_FOLDER_NAME=LMs
 AM_FOLDER_NAME=AMs
@@ -19,21 +19,21 @@ LANGUAGE="af-ZA, am-ET, ar-AE, ar-BH, ar-DZ, ar-EG, ar-IQ, ar-JO, ar-KW, ar-LB, 
 INGRESS_CONTROLLER=nginx
 
 # NGINX
-NGINX_CONF_PATH=/home/ilyes/Documents/github/nginx/nginx.conf
-NGINX_SERVICE_ID=nginx-manager
+NGINX_CONF_PATH=/path/to/your/nginx/config
+NGINX_SERVICE_ID=nginx-service-name
 
 # Cluster Manager
 CLUSTER_TYPE=DockerSwarm
 
 # Docker SWARM
-DOCKER_SOCKET_PATH=/var/run/docker.sock
+DOCKER_SOCKET_PATH=/path/to/your/docker/socket
 DOCKER_EXTERNAL_NET=linto-net
 ### DOCKER_TIMEOUT (in seconds)
 DOCKER_TIMEOUT=5
 
 
 # Mongodb settings
-MONGODB_HOST=mongodb-manager
+MONGODB_HOST=localhost
 MONGODB_PORT=27017
 MONGODB_DBNAME_SMANAGER=linSTTAdmin
 MONGODB_REQUIRE_LOGIN=true
@@ -42,5 +42,5 @@ MOGODB_PSWD=root
 
 # LinSTT settings
 LINSTT_SYS=kaldi
-LINSTT_IMAGE=lintoai/linto-platform-stt-standalone-worker
+LINSTT_IMAGE=stt-service-image-name
 LINSTT_PORT=2000
