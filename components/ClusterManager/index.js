@@ -11,7 +11,7 @@ class ClusterManager extends Component {
         this.app = app
         this.db = { service: service, lm: lm, am: am }
         this.tag = ['offline-cpu', 'online-cpu', 'offline-gpu', 'offline-gpu']
-        switch(process.env.CLUSTER_TYPE){
+        switch (process.env.CLUSTER_TYPE) {
             case 'DockerSwarm': this.cluster = require(`./DockerSwarm`); break
             case 'Kubernetes': this.cluster = ''; break
             default: throw 'Undefined CLUSTER type'

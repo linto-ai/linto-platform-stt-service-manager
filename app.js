@@ -14,7 +14,9 @@ class App {
                 return prev.then(async () => { await this.use(componentFolderName) })
             }, Promise.resolve()).then(() => {
                 // Do some stuff after all components being loaded
-                require(`${process.cwd()}/models/MongoDB`).initPool()
+                require(`${process.cwd()}/models/MongoDB`).initPool().then(() => {
+                    this.components['ClusterManager'].emit('verifServices')
+                })
             })
         } catch (e) {
             console.error(debug.namespace, e)

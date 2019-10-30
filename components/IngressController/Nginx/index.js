@@ -1,4 +1,5 @@
 const debug = require('debug')(`app:ingresscontroller:nginx`)
+const fs = require('fs')
 const NginxConfFile = require('nginx-conf').NginxConfFile;
 const Docker = require('dockerode');
 const docker = new Docker({ socketPath: process.env.DOCKER_SOCKET_PATH });
@@ -6,6 +7,7 @@ const docker = new Docker({ socketPath: process.env.DOCKER_SOCKET_PATH });
 class Nginx {
     constructor() {
         try {
+            fs.copyFileSync(`${process.cwd()}/components/IngressController/Nginx/nginx.conf`,process.env.NGINX_CONF_PATH)
             this.createConf().then(res => { this.conf = res })
         } catch (err) {
             throw err
@@ -95,7 +97,7 @@ class Nginx {
             try {
                 const nginx = await docker.listContainers({
                     "filters": {
-                        "name": [`/${process.env.NGINX_SERVICE_ID}*`]
+                        "name": [`/*${process.env.NGINX_SERVICE_ID}*`]
                         //"label":[`com.docker.swarm.service.name=${process.env.NGINX_SERVICE_ID}`]
                     }
                 })

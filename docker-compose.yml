@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+
+  stt-service-manager:
+    image: service-manager:latest
+    depends_on:
+      - mongodb-stt-service-manager
+      - nginx-stt-service-manager
+    volumes:
+      - ./model:/opt/model
+      - ./config/nginx.conf:/opt/nginx/nginx.conf
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/swagger.yml:/opt/swagger.yml
+    ports:
+      - target: 8000
+        published: 81
+    deploy:
+      mode: global
+    env_file: .env
+    networks:
+      - linto-net
+
+  nginx-stt-service-manager:
+    image: nginx:latest
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    deploy:
+      mode: global
+    networks:
+      - linto-net
+
+  mongodb-stt-service-manager:
+    image: mongo:latest
+    volumes:
+      - ./model/dbdata:/data/db
+      - ./config/seed:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_DATABASE: linSTTAdmin
+    deploy:
+      mode: global
+    networks:
+      - linto-net
+
+networks:
+    internal:
+    linto-net:
+       external: true

@@ -162,6 +162,10 @@ class DockerSwarm {
         })
     }
 
+    getServiceInfo(serviceId){
+        return docker.getService(serviceId)
+    }
+
 }
 
 module.exports = new DockerSwarm()

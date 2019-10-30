@@ -26,12 +26,14 @@ let p_cnx = {}; //connexion pool variable
 
 function MongoPool() { }
 
-function initPool(cb) {
-    MongoClient.connect(url, option, function (err, cnx) {
-        if (err) throw err;
-        p_cnx = cnx;
-    });
-    return MongoPool;
+function initPool() {
+    return new Promise((resolve, reject) => {
+        MongoClient.connect(url, option, function (err, cnx) {
+            if (err) reject(err)
+            p_cnx = cnx;
+            resolve(MongoPool)
+        });
+    })
 }
 MongoPool.initPool = initPool;
 
@@ -139,7 +141,7 @@ async function findOne(DB_NAME, collection, query) {
     return new Promise((resolve, reject) => {
         try {
             db = p_cnx.db(DB_NAME)
-            db.collection(collection).findOne(query,(err, res) => {
+            db.collection(collection).findOne(query, (err, res) => {
                 if (err) reject(err)
                 resolve(res)
             })
@@ -151,7 +153,7 @@ async function findOne(DB_NAME, collection, query) {
 MongoPool.findOne = findOne
 
 // find many query
-async function findMany(DB_NAME, collection, query={}) {
+async function findMany(DB_NAME, collection, query = {}) {
     return new Promise((resolve, reject) => {
         try {
             db = p_cnx.db(DB_NAME)

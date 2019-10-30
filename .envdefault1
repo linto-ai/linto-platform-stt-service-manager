@@ -3,10 +3,10 @@ COMPONENTS=WebServer,LinSTT,ClusterManager,IngressController
 WEBSERVER_HTTP_PORT=8000
 
 # File system
-FILESYSTEM=/path/to/your/model/storage
+FILESYSTEM=/home/ilyes/Documents/gitlab/platform-stt-service-manager/model
 
 # Docker configuration paths
-SAVE_MODELS_PATH=/opt/model
+SAVE_MODELS_PATH=/home/ilyes/Documents/gitlab/platform-stt-service-manager/model
 TEMP_FOLDER_NAME=tmp
 LM_FOLDER_NAME=LMs
 AM_FOLDER_NAME=AMs
@@ -19,7 +19,7 @@ LANGUAGE="af-ZA, am-ET, ar-AE, ar-BH, ar-DZ, ar-EG, ar-IQ, ar-JO, ar-KW, ar-LB, 
 INGRESS_CONTROLLER=nginx
 
 # NGINX
-NGINX_CONF_PATH=/opt/nginx/nginx.conf
+NGINX_CONF_PATH=/home/ilyes/Documents/gitlab/platform-stt-service-manager/config/nginx.conf
 NGINX_SERVICE_ID=nginx-stt-service-manager
 
 # Cluster Manager
@@ -33,7 +33,7 @@ DOCKER_TIMEOUT=5
 
 
 # Mongodb settings
-MONGODB_HOST=mongodb-stt-service-manager
+MONGODB_HOST=localhost
 MONGODB_PORT=27017
 MONGODB_DBNAME_SMANAGER=linSTTAdmin
 MONGODB_REQUIRE_LOGIN=true
