@@ -8,7 +8,7 @@ const datetime = require('node-datetime')
 
 /**
  * apiAModel.js
- * 
+ *
 const debug = require('debug')(`app:linstt:apiamodel`)
 const fs = require('fs').promises
 const rimraf = require("rimraf");
@@ -20,7 +20,7 @@ const download = require('download');
 
 /**
  * apiLModel.js
- * 
+ *
 const debug = require('debug')(`app:linstt:apilmodel`)
 const fs = require('fs').promises
 const rimraf = require("rimraf");
@@ -34,7 +34,7 @@ const ncpPromise = require('util').promisify(ncp)
 
 /**
  * apiElement.js
- * 
+ *
 const debug = require('debug')(`app:linstt:apielement`)
 const fs = require('fs').promises
  *
@@ -256,11 +256,13 @@ module.exports = function () {
             return cb({ bool: false, msg: err })
         }
     })
+
     this.app.components['WebServer'].on('getAModel', async (cb, modelId) => {
         try {
             const res = await this.db.am.findModel(modelId)
-            if (res === -1)
+            if (res === -1) {
                 throw `Acoustic Model '${modelId}' does not exist`
+            }
             return cb({ bool: true, msg: res })
         } catch (err) {
             return cb({ bool: false, msg: err })

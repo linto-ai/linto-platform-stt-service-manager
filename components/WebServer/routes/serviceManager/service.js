@@ -3,9 +3,9 @@ let YAML = require('yamljs');
 const multer = require('multer')
 const form = multer({ dest: process.env.TEMP_FILE_PATH }).none()
 
-function answer(out, res) {
-    if (out.bool) res.json(out.msg)
-    else { res.status(400); res.json({ status: out.msg }) }
+const middlewares = require(`${process.cwd()}/components/WebServer/middlewares/index.js`)
+const answer = (ans, req) => {
+    middlewares.answer(ans, req)
 }
 
 /*
@@ -129,6 +129,15 @@ module.exports = (webserver) => {
         controller:
             async (req, res, next) => {
                 webserver.emit("getModeService", (ans) => { answer(ans, res) }, req.params.serviceId)
+            }
+    },
+    {
+        path: '/test',
+        method: 'get',
+        requireAuth: false,
+        controller:
+            async (req, res, next) => {
+                webserver.emit("testroute", (ans) => { answer(ans, res) }, req.params.serviceId)
             }
     }]
 }

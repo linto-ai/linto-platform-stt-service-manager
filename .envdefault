@@ -3,7 +3,7 @@ COMPONENTS=WebServer,LinSTT,ClusterManager,IngressController
 WEBSERVER_HTTP_PORT=8000
 
 # File system
-FILESYSTEM=/path/to/your/model/storage
+FILESYSTEM=PATH/TO/PROJET/model
 
 # Docker configuration paths
 SAVE_MODELS_PATH=/opt/model
@@ -44,3 +44,5 @@ MOGODB_PSWD=root
 LINSTT_SYS=kaldi
 LINSTT_IMAGE=lintoai/linto-platform-stt-standalone-worker
 LINSTT_PORT=2000
+
+WHITELIST_DOMAINS=DOMAIN1,DOMAIN2

@@ -8,7 +8,6 @@ module.exports = webServer => {
         '/acmodels' : require('./modelManager/amodels')(webServer),
         '/langmodel/:modelId' : require('./modelManager/lmodel')(webServer),
         '/langmodels' : require('./modelManager/lmodels')(webServer),
-
         '/langmodel/:modelId/entity/:name' : require('./modelManager/element')(webServer,'entities'),
         '/langmodel/:modelId/entities' : require('./modelManager/elements')(webServer,'entities'),
         '/langmodel/:modelId/intent/:name' : require('./modelManager/element')(webServer,'intents'),

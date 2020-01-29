@@ -29,21 +29,30 @@ class ServiceUpdates {
 
     // find acoustic model by name
     async findService(id) {
-        return await query.findOne(this.DB, this.collection, { serviceId: id }).then(async (service) => {
-            if (service === null)
-                return -1
-            service.replicas = parseInt(service.replicas)
-            return service
-        })
+        try {
+            return await query.findOne(this.DB, this.collection, { serviceId: id }).then(async (service) => {
+                if (service === null)
+                    return -1
+                service.replicas = parseInt(service.replicas)
+                return service
+            })
+        } catch (error) {
+            console.error(error)
+            return error
+        }
+
     }
 
     // find all acoustic models
     async findServices(request = {}) {
-        return await query.findMany(this.DB, this.collection, request).then(async (services) => {
-            if (services.length === 0)
-                return -1
-            return services
-        })
+        try {
+            return await query.findMany(this.DB, this.collection, request).then(async (services) => {
+                return services
+            })
+        } catch (error) {
+            console.error(error)
+            return error
+        }
     }
 
     async updateService(id, obj) {

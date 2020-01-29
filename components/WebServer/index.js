@@ -5,6 +5,19 @@ const express = require('express')
 const Session = require('express-session')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const CORS = require('cors')
+const whitelistDomains = process.env.WHITELIST_DOMAINS.split(',')
+const corsOptions = {
+
+  origin: function (origin, callback) {
+    console.log(origin, whitelistDomains)
+    if (!origin || whitelistDomains.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 class WebServer extends Component {
     constructor(app) {
@@ -12,6 +25,7 @@ class WebServer extends Component {
         this.id = this.constructor.name
         this.app = app
         this.express = express()
+        this.express.use(CORS(corsOptions))
         this.express.set('etag', false)
         this.express.set('trust proxy', true)
         this.express.use(bodyParser.json())
@@ -19,6 +33,7 @@ class WebServer extends Component {
             extended: true
         }))
         this.express.use(cookieParser())
+
         let sessionConfig = {
             resave: false,
             saveUninitialized: true,

@@ -10,106 +10,154 @@ class LMUpdates {
 
     //create a new instance
     async createModel(modelName, acName = "", lang = "", isGenerated = 0, isDirty = 0, entities = [], intents = []) {
-        let newModel = {
-            modelId: modelName,
-            acmodelId: acName,
-            entities: entities,
-            intents: intents,
-            lang: lang,
-            isGenerated: isGenerated,
-            isDirty: isDirty,
-            date: datetime.create().format('m/d/Y-H:M:S'),
-            dateGen: null
+        try {
+            let newModel = {
+                modelId: modelName,
+                acmodelId: acName,
+                entities: entities,
+                intents: intents,
+                lang: lang,
+                isGenerated: isGenerated,
+                isDirty: isDirty,
+                date: datetime.create().format('m/d/Y-H:M:S'),
+                dateGen: null
+            }
+            return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
+                if (model === null) return await query.insertOne(this.DB, this.collection, newModel)
+                return -1
+            })
+        } catch (error) {
+            return error
         }
-        return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
-            if (model === null) return await query.insertOne(this.DB, this.collection, newModel)
-            return -1
-        })
     }
 
     // delete language model by name
     async deleteModel(modelName) {
-        return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
-            if (model === null)
-                return -1
-            return await query.deleteOne(this.DB, this.collection, { modelId: modelName })
-        })
+        try {
+            return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
+
+                if (model === null)
+                    return -1
+                return await query.deleteOne(this.DB, this.collection, { modelId: modelName })
+            })
+        } catch (error) {
+            return error
+        }
     }
 
     // find language model by name
     async findModel(modelName) {
-        return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
-            if (model === null)
-                return -1
-            return model
-        })
+        try {
+            return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
+                if (model === null)
+                    return -1
+                return model
+            })
+        } catch (error) {
+            return error
+        }
     }
 
     // find all language models
     async findModels(request = {}) {
-        return await query.findMany(this.DB, this.collection, request).then(async (models) => {
-            if (models.length === 0)
-                return -1
-            return models
-        })
+        try {
+            return await query.findMany(this.DB, this.collection, request).then(async (models) => {
+                if (models.length === 0)
+                    return -1
+                return models
+            })
+        } catch (error) {
+            return error
+        }
     }
 
     async updateModel(modelName, obj) {
-        return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
-            if (model === null)
-                return -1
-            obj.date = datetime.create().format('m/d/Y-H:M:S')
-            return await query.updateOne(this.DB, this.collection, { modelId: modelName }, { mode: '$set', value: obj })
-        })
+        try {
+            return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
+                if (model === null)
+                    return -1
+                obj.date = datetime.create().format('m/d/Y-H:M:S')
+                return await query.updateOne(this.DB, this.collection, { modelId: modelName }, { mode: '$set', value: obj })
+            })
+        } catch (error) {
+            console.error(error)
+            return error
+        }
     }
 
     // Update a single entity/intent by model modelId
     async pushType(modelName, element, value) {
-        const id = { modelId: modelName }
-        const set = { date: datetime.create().format('m/d/Y-H:M:S'), isDirty: 1 }
-        const type = {}
-        type[element] = value //intent or entity
-        return await query.updateOne(this.DB, this.collection, id, { mode: '$set', value: set }, { mode: '$push', value: type })
+        try {
+            const id = { modelId: modelName }
+            const set = { date: datetime.create().format('m/d/Y-H:M:S'), isDirty: 1 }
+            const type = {}
+            type[element] = value //intent or entity
+            return await query.updateOne(this.DB, this.collection, id, { mode: '$set', value: set }, { mode: '$push', value: type })
+        } catch (error) {
+            return error
+        }
+
     }
 
     // remove a single entity/intent by model modelId
     async pullType(modelName, element, name) {
-        const id = { modelId: modelName }
-        const set = { date: datetime.create().format('m/d/Y-H:M:S'), isDirty: 1 }
-        const type = {}
-        type[element] = { name: name } //intent or entity
-        return await query.updateOne(this.DB, this.collection, id, { mode: '$set', value: set }, { mode: '$pull', value: type })
+        try {
+            const id = { modelId: modelName }
+            const set = { date: datetime.create().format('m/d/Y-H:M:S'), isDirty: 1 }
+            const type = {}
+            type[element] = { name: name } //intent or entity
+            return await query.updateOne(this.DB, this.collection, id, { mode: '$set', value: set }, { mode: '$pull', value: type })
+        } catch (error) {
+            return error
+        }
+
     }
 
     // remove all entities/intents by model modelId
     async deleteType(modelName) {
-        const id = { modelId: modelName }
-        const request = {}
-        request.date = datetime.create().format('m/d/Y-H:M:S')
-        request.isDirty = 1
-        request[this.type] = [] //intent or entity
-        return await query.updateOne(this.DB, this.collection, id, { mode: '$set', value: request })
+        try {
+            const id = { modelId: modelName }
+            const request = {}
+            request.date = datetime.create().format('m/d/Y-H:M:S')
+            request.isDirty = 1
+            request[this.type] = [] //intent or entity
+            return await query.updateOne(this.DB, this.collection, id, { mode: '$set', value: request })
+        } catch (error) {
+            return error
+        }
     }
 
     // update model state(isGenerated) by model modelId
     async updateModelState(modelName) {
-        const id = { modelId: modelName }
-        const state = { isGenerated: 1 }
-        return await query.updateOne(this.DB, this.collection, id, { mode: '$set', value: state })
+        try {
+            const id = { modelId: modelName }
+            const state = { isGenerated: 1 }
+            return await query.updateOne(this.DB, this.collection, id, { mode: '$set', value: state })
+        } catch (error) {
+            return error
+        }
     }
 
     // get model state(isGenerated) by model modelId
     async getModelState(modelName) {
-        return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
-            if (model === null)
-                return -1
-            return parseInt(model.isGenerated)
-        })
+        try {
+            return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {
+                if (model === null)
+                    return -1
+                return parseInt(model.isGenerated)
+            })
+        } catch (error) {
+            return error
+        }
     }
 
     // remove collection
     async dropCollection() {
-        return await query.dropCollection(this.DB, this.collection)
+        try {
+            return await query.dropCollection(this.DB, this.collection)
+        } catch (error) {
+            return error
+        }
     }
 
 }

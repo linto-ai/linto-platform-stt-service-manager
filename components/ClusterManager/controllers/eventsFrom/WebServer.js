@@ -237,4 +237,18 @@ module.exports = function () {
         }
     })
 
+    this.app.components['WebServer'].on('testroute', async (cb) => {
+        /**
+          * get number of replicas for a giving service
+          * @param serviceId
+          * @returns {Object}
+        */
+        try {
+            console.log('PASSE PAR TEST?')
+            return cb({ bool: true, msg: 'je suis un test' })
+        } catch (err) {
+            return cb({ bool: false, msg: err })
+        }
+    })
+
 }

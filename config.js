@@ -26,10 +26,9 @@ function configureDefaults() {
         process.env.AM_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.AM_FOLDER_NAME}`
         process.env.TEMP_FOLDER_NAME = ifHas(process.env.TEMP_FOLDER_NAME, envdefault.TEMP_FOLDER_NAME)
         process.env.TEMP_FILE_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.TEMP_FOLDER_NAME}`
-
+        process.env.WHITELIST_DOMAINS = ifHasNotThrow(process.env.WHITELIST_DOMAINS, 'No whitelist found. Please edit ".env" file')
         if (process.env.FILESYSTEM === undefined)
             process.env.FILESYSTEM = process.env.SAVE_MODELS_PATH
-
         //Dictionary parameters
         process.env.DICT_DELIMITER = ifHas(process.env.DICT_DELIMITER, envdefault.DICT_DELIMITER)
         process.env.LANGUAGE = ifHas(process.env.LANGUAGE, envdefault.LANGUAGE)
@@ -55,7 +54,7 @@ function configureDefaults() {
         process.env.DOCKER_SOCKET_PATH = ifHas(process.env.DOCKER_SOCKET_PATH, envdefault.DOCKER_SOCKET_PATH)
         process.env.DOCKER_EXTERNAL_NET = ifHas(process.env.DOCKER_EXTERNAL_NET, envdefault.DOCKER_EXTERNAL_NET)
         process.env.DOCKER_TIMEOUT = ifHas(process.env.DOCKER_TIMEOUT, envdefault.DOCKER_TIMEOUT)
-        
+
         //LINSTT
         process.env.LINSTT_SYS = ifHas(process.env.LINSTT_SYS, envdefault.LINSTT_SYS)
         process.env.LINSTT_IMAGE = ifHas(process.env.LINSTT_IMAGE, envdefault.LINSTT_IMAGE)

@@ -10,7 +10,15 @@ function checkAuth(req, res, next) {
     next()
 }
 
+function answer(out, res) {
+    res.json({
+        status: out.bool ? 'success' : 'error',
+        data: out.msg
+    })
+}
+
 module.exports = {
+    answer,
     checkAuth,
     logger
 }

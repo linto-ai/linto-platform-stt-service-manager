@@ -4,7 +4,6 @@ const middlewares = require(path.join(__dirname, "../middlewares"))
 const ifHasElse = (condition, ifHas, otherwise) => {
     return !condition ? otherwise() : ifHas()
 }
-
 class Router {
     constructor(webServer) {
         const routes = require('./routes.js')(webServer)
