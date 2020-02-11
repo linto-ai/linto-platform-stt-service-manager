@@ -30,7 +30,11 @@ module.exports = (webserver) => {
         requireAuth: false,
         controller:
             (req, res, next) => {
-                webserver.emit("generateLModel", (ans) => { answer(ans, res) }, req.params.modelId)
+                try {
+                    webserver.emit("generateLModel", (ans) => { answer(ans, res) }, req.params.modelId)
+                } catch (error) {
+                    console.error(error)
+                }
             }
     },
     {
@@ -50,5 +54,7 @@ module.exports = (webserver) => {
             (req, res, next) => {
                 webserver.emit("getLModel", (ans) => { answer(ans, res) }, req.params.modelId)
             }
-    }]
+    },
+
+]
 }

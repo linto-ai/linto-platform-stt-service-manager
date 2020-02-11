@@ -46,3 +46,4 @@ LINSTT_IMAGE=lintoai/linto-platform-stt-standalone-worker
 LINSTT_PORT=2000
 
 WHITELIST_DOMAINS=DOMAIN1,DOMAIN2
+LINTO_ADMIN_URL=http://localhost:9000

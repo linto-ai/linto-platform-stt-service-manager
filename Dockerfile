@@ -50,4 +50,5 @@ RUN touch /opt/swagger.yml && cd /usr/src/app/components/WebServer/public/apidoc
 
 ENV PATH /opt/kaldi/egs/wsj/s5/utils:/opt/kaldi/tools/openfst/bin:/opt/kaldi/src/fstbin:/opt/kaldi/src/lmbin:/opt/kaldi/src/bin:/opt/kaldi/tools/phonetisaurus-g2p/src/scripts:/opt/kaldi/tools/phonetisaurus-g2p:/opt/kaldi/tools/sequitur-g2p/g2p.py:/opt/kaldi/tools/irstlm/bin:$PATH
 
+EXPOSE 80
 CMD [ "npm", "start" ]
