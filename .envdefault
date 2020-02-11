@@ -1,6 +1,8 @@
 # Components loading in this order
 COMPONENTS=WebServer,LinSTT,ClusterManager,IngressController
 WEBSERVER_HTTP_PORT=8000
+WEBSOCKET_PORT=8001
+WHITELIST_DOMAINS=DOMAIN1,DOMAIN2
 
 # File system
 FILESYSTEM=PATH/TO/PROJET/model
@@ -45,5 +47,5 @@ LINSTT_SYS=kaldi
 LINSTT_IMAGE=lintoai/linto-platform-stt-standalone-worker
 LINSTT_PORT=2000
 
-WHITELIST_DOMAINS=DOMAIN1,DOMAIN2
+# LinTO admin
 LINTO_ADMIN_URL=http://localhost:9000

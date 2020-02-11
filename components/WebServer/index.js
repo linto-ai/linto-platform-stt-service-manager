@@ -8,9 +8,7 @@ const cookieParser = require('cookie-parser')
 const CORS = require('cors')
 const whitelistDomains = process.env.WHITELIST_DOMAINS.split(',')
 const corsOptions = {
-
   origin: function (origin, callback) {
-    console.log(origin, whitelistDomains)
     if (!origin || whitelistDomains.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
