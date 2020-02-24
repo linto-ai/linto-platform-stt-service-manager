@@ -20,6 +20,9 @@ class LMUpdates {
                 isGenerated: isGenerated,
                 isDirty: isDirty,
                 date: datetime.create().format('m/d/Y-H:M:S'),
+                updateState: 0,
+                updateStatus: '',
+                oov: [],
                 dateGen: null
             }
             return await query.findOne(this.DB, this.collection, { modelId: modelName }).then(async (model) => {

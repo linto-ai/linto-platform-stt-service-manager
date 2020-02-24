@@ -101,6 +101,7 @@ class Nginx {
                         //"label":[`com.docker.swarm.service.name=${process.env.NGINX_SERVICE_ID}`]
                     }
                 })
+                if (nginx.length == 0) reject('Service Nginx is not running!!!')
                 const nginx_id = nginx[0].Names[0].replace('/', '')
                 const container = await docker.getContainer(nginx_id)
                 container.exec({

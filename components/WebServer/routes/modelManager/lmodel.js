@@ -26,7 +26,7 @@ module.exports = (webserver) => {
     },
     {
         path: '/generate/graph',
-        method: 'post',
+        method: 'get',
         requireAuth: false,
         controller:
             (req, res, next) => {
@@ -55,6 +55,13 @@ module.exports = (webserver) => {
                 webserver.emit("getLModel", (ans) => { answer(ans, res) }, req.params.modelId)
             }
     },
-
-]
+    {
+        path: '/:param',
+        method: 'get',
+        requireAuth: false,
+        controller:
+            (req, res, next) => {
+                webserver.emit("getLModel", (ans) => { answer(ans, res) }, req.params.modelId, req.params.param)
+            }
+    }]
 }

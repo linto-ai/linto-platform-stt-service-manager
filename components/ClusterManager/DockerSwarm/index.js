@@ -93,6 +93,7 @@ class DockerSwarm {
                 const service = await docker.listContainers({
                     "filters": { "label": [`com.docker.swarm.service.name=${serviceId}`] }
                 })
+                debug(service.length)
                 if (service.length === 0) break
             }
             return 1
@@ -119,7 +120,6 @@ class DockerSwarm {
         return new Promise((resolve, reject) => {
             try {
                 const options = this.serviceOption(params)
-                console.log(options.TaskTemplate.ContainerSpec)
                 docker.createService(options, function (err) {
                     if (err) reject(err)
                     resolve()
@@ -153,8 +153,13 @@ class DockerSwarm {
     async deleteService(serviceId) {
         return new Promise(async (resolve, reject) => {
             try {
-                const service = await docker.getService(serviceId)
-                await service.remove()
+                const info = await docker.listContainers({
+                    "filters": { "label": [`com.docker.swarm.service.name=${serviceId}`] }
+                })
+                if (info.length > 0) {
+                    const service = await docker.getService(serviceId)
+                    await service.remove()
+                }
                 resolve()
             } catch (err) {
                 reject(err)
@@ -162,8 +167,20 @@ class DockerSwarm {
         })
     }
 
-    getServiceInfo(serviceId){
+    getServiceInfo(serviceId) {
         return docker.getService(serviceId)
+    }
+
+    async serviceIsOn(serviceId) {
+        try {
+            const info = await docker.listContainers({
+                "filters": { "label": [`com.docker.swarm.service.name=${serviceId}`] }
+            })
+            return info.length
+        } catch (err) {
+            debug(err)
+            return 0
+        }
     }
 
 }

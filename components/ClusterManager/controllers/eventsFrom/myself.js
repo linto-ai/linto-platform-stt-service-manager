@@ -7,8 +7,8 @@ module.exports = function () {
         if (services !== -1) {
             services.forEach(async service => {
                 if (service.isOn) { //check if the service is running
-                    const info = this.cluster.getServiceInfo(service.serviceId)
-                    if (info.modem.checkServerIdentity === undefined) {
+                    const replicas = await this.cluster.serviceIsOn(service.serviceId)
+                    if (replicas !== service.replicas) {
                         await this.cluster.createService(service)
                         const check = await this.cluster.checkServiceOn(service)
                         if (check) {
@@ -16,9 +16,8 @@ module.exports = function () {
                         }
                     }
                 } else { //
-                    const info = this.cluster.getServiceInfo(service.serviceId)
-                    debug(info)
-                    if (info.modem.checkServerIdentity !== undefined) {
+                    const replicas = await this.cluster.serviceIsOn(service.serviceId)
+                    if (replicas > 0) {
                         await this.cluster.deleteService(service.serviceId)
                     }
                 }

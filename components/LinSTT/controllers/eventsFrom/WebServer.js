@@ -95,6 +95,7 @@ module.exports = function () {
                 if (payload.data !== undefined) {
                     if (payload.data.intents !== undefined)
                         for (let i = 0; i < payload.data.intents.length; i++) {
+                            let data = {}
                             const curr = payload.data.intents[i]
                             if (curr.name !== undefined && curr.items !== undefined && curr.items.length !== 0) {
                                 await this.checkExists({ modelId: payload.modelId, name: curr.name }, 'intents', false)
@@ -102,7 +103,9 @@ module.exports = function () {
                                         await this.db.lm.deleteModel(payload.modelId)
                                         throw 'The model data are invalid (' + err + ')'
                                     })
-                                await this.db.lm.pushType(payload.modelId, 'intents', curr)
+                                data['name'] = curr.name
+                                data['items'] = curr.items
+                                await this.db.lm.pushType(payload.modelId, 'intents', data)
                             } else {
                                 await this.db.lm.deleteModel(payload.modelId)
                                 throw 'The model data are invalid'
@@ -110,6 +113,7 @@ module.exports = function () {
                         }
                     if (payload.data.entities !== undefined)
                         for (let i = 0; i < payload.data.entities.length; i++) {
+                            let data = {}
                             const curr = payload.data.entities[i]
                             if (curr.name !== undefined && curr.items !== undefined && curr.items.length !== 0) {
                                 await this.checkExists({ modelId: payload.modelId, name: curr.name }, 'entities', false)
@@ -117,7 +121,9 @@ module.exports = function () {
                                         await this.db.lm.deleteModel(payload.modelId)
                                         throw 'The model data are invalid (' + err + ')'
                                     })
-                                await this.db.lm.pushType(payload.modelId, 'entities', curr)
+                                data['name'] = curr.name
+                                data['items'] = curr.items
+                                await this.db.lm.pushType(payload.modelId, 'entities', data)
                             } else {
                                 await this.db.lm.deleteModel(payload.modelId)
                                 throw 'The model data are invalid'
@@ -125,7 +131,7 @@ module.exports = function () {
                         }
                 }
                 await fs.mkdir(destPath)
-                return cb({ bool: true, msg: `An empty Language Model '${payload.modelId}' is successfully created` })
+                return cb({ bool: true, msg: `The Language Model '${payload.modelId}' is successfully created` })
             }
 
             const check = await this.stt.checkModel(payload.modelId, 'lm')
@@ -152,12 +158,15 @@ module.exports = function () {
             return cb({ bool: false, msg: err })
         }
     })
-    this.app.components['WebServer'].on('getLModel', async (cb, modelId) => {
+    this.app.components['WebServer'].on('getLModel', async (cb, modelId, param = '') => {
         try {
             const res = await this.db.lm.findModel(modelId)
             if (res === -1)
                 throw `Language Model '${modelId}' does not exist`
-            return cb({ bool: true, msg: res })
+            if (param == '')
+                return cb({ bool: true, msg: res })
+            else
+                return cb({ bool: true, msg: res[param] })
         } catch (err) {
             return cb({ bool: false, msg: err })
         }
@@ -190,11 +199,16 @@ module.exports = function () {
                 throw `Language Model '${modelId}' does not exist`
             if (res.isDirty === 0 && res.isGenerated === 1)
                 throw `Language Model '${modelId}' is already generated and is up-to-date`
-            const oov = await this.stt.generate_HCLG(res.entities, res.intents, res.acmodelId, modelId)
-            await this.db.lm.updateModel(modelId, { isGenerated: 1, isDirty: 0, dateGen: datetime.create().format('m/d/Y-H:M:S') })
-            await this.db.service.updateServicebyParam({ LModelId: modelId }, { isDirty: 1 })
-            return cb({ bool: true, msg: `Language Model '${modelId}' is generated successfully. Check the following out-of-vocabulary words: ${oov}` })
+            if (res.updateState > 0)
+                throw `Language Model '${modelId}' is in generation process`
+            
+            let data = {}
+            data.updateState = 1
+            await this.db.lm.updateModel(modelId, data)
+            this.generateModel(res,this.db.lm)
+            return cb({ bool: true, msg: `The process of generation of the Language Model '${modelId}' is successfully started.` })
         } catch (err) {
+            debug(err)
             return cb({ bool: false, msg: err })
         }
     })

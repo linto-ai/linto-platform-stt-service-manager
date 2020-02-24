@@ -69,6 +69,85 @@ class LinSTT extends Component {
         }
     }
 
+    async generateModel(res,db) {
+        try {
+            let data = {}
+            await this.stt.prepareParam(res.acmodelId, res.modelId).then(async ()=>{
+                debug(`done prepareParam (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 1
+                await db.updateModel(res.modelId, data)
+            })
+            await this.stt.prepare_lex_vocab().then(async ()=>{
+                debug(`done prepare_lex_vocab (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 3
+                await db.updateModel(res.modelId, data)
+            })
+            await this.stt.prepare_intents(res.intents).then(async ()=>{
+                debug(`done prepare_intents (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 8
+                await db.updateModel(res.modelId, data)
+            })
+            await this.stt.prepare_entities(res.entities).then(async ()=>{
+                debug(`done prepare_entities (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 13
+                await db.updateModel(res.modelId, data)
+            })
+
+            this.stt.check_entities()
+            debug(`done check_entities (${this.stt.tmplmpath})`)
+
+            await this.stt.prepare_new_lexicon().then(async ()=>{
+                debug(`done prepare_new_lexicon (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 15
+                await db.updateModel(res.modelId, data)
+            })
+            await this.stt.generate_arpa().then(async ()=>{
+                debug(`done generate_arpa (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 20
+                await db.updateModel(res.modelId, data)
+            })
+            await this.stt.prepare_lang().then(async ()=>{
+                debug(`done prepare_lang (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 60
+                await db.updateModel(res.modelId, data)
+            })
+            this.stt.generate_main_and_entities_HCLG(res.acmodelId)
+            await this.stt.check_previous_HCLG_creation().then(async ()=>{
+                debug(`done generate_main_and_entities_HCLG (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 90
+                await db.updateModel(res.modelId, data)
+            })
+            await this.stt.generate_final_HCLG(res.modelId).then(async ()=>{
+                debug(`done generate_final_HCLG (${this.stt.tmplmpath})`)
+                data = {}
+                data.updateState = 100
+                await db.updateModel(res.modelId, data)
+            })
+            this.stt.removeTmpFolder()
+
+            data = {}
+            data.isGenerated = 1
+            data.updateState = 0
+            data.isDirty = 0
+            data.oov = this.stt.oov
+            data.updateStatus = `Language model '${res.modelId}' is successfully generated`
+            await db.updateModel(res.modelId, data)
+        } catch (err) {
+            this.stt.removeTmpFolder()
+            let data = {}
+            data.updateState = -1
+            data.updateStatus = `Language model '${res.modelId}' is not generated. ERROR: ${err}`
+            await db.updateModel(res.modelId, data)
+        }
+    }
 }
 
 module.exports = app => new LinSTT(app)

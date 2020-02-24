@@ -15,10 +15,10 @@ function ifHas(element, defaultValue) {
 function configureDefaults() {
     try {
         dotenv.config() // loads process.env from .env file (if not specified by the system)
-        const envdefault = dotenv.parse(fs.readFileSync('.envdefault')) // default usable values
+        const envdefault = dotenv.parse(fs.readFileSync('.defaultparam')) // default usable values
         process.env.COMPONENTS = ifHas(process.env.COMPONENTS, envdefault.COMPONENTS)
         process.env.WEBSERVER_HTTP_PORT = ifHas(process.env.WEBSERVER_HTTP_PORT, envdefault.WEBSERVER_HTTP_PORT)
-        process.env.FILESYSTEM = ifHas(process.env.FILESYSTEM, envdefault.FILESYSTEM)
+        process.env.FILESYSTEM = ifHasNotThrow(process.env.FILESYSTEM, 'No FILESYSTEM param found. Please edit ".env" file')
         process.env.SAVE_MODELS_PATH = ifHas(process.env.SAVE_MODELS_PATH, envdefault.SAVE_MODELS_PATH)
         process.env.LM_FOLDER_NAME = ifHas(process.env.LM_FOLDER_NAME, envdefault.LM_FOLDER_NAME)
         process.env.LM_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.LM_FOLDER_NAME}`
@@ -27,11 +27,11 @@ function configureDefaults() {
         process.env.TEMP_FOLDER_NAME = ifHas(process.env.TEMP_FOLDER_NAME, envdefault.TEMP_FOLDER_NAME)
         process.env.TEMP_FILE_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.TEMP_FOLDER_NAME}`
         process.env.WHITELIST_DOMAINS = ifHasNotThrow(process.env.WHITELIST_DOMAINS, 'No whitelist found. Please edit ".env" file')
-        if (process.env.FILESYSTEM === undefined)
-            process.env.FILESYSTEM = process.env.SAVE_MODELS_PATH
+        
         //Dictionary parameters
         process.env.DICT_DELIMITER = ifHas(process.env.DICT_DELIMITER, envdefault.DICT_DELIMITER)
         process.env.LANGUAGE = ifHas(process.env.LANGUAGE, envdefault.LANGUAGE)
+        process.env.NGRAM = ifHas(process.env.NGRAM, envdefault.NGRAM)
 
         //MongoDB
         process.env.MONGODB_HOST = ifHas(process.env.MONGODB_HOST, envdefault.MONGODB_HOST)
