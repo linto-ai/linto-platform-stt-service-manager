@@ -1,8 +1,8 @@
 const Component = require(`../component.js`)
 const debug = require('debug')(`app:clustermanager`)
-const service = require(`${process.cwd()}/models/ServiceUpdates`)
-const lm = require(`${process.cwd()}/models/LMUpdates`)
-const am = require(`${process.cwd()}/models/AMUpdates`)
+const service = require(`${process.cwd()}/models/models/ServiceUpdates`)
+const lm = require(`${process.cwd()}/models/models/LMUpdates`)
+const am = require(`${process.cwd()}/models/models/AMUpdates`)
 
 class ClusterManager extends Component {
     constructor(app) {
@@ -10,7 +10,7 @@ class ClusterManager extends Component {
         this.id = this.constructor.name
         this.app = app
         this.db = { service: service, lm: lm, am: am }
-        this.tag = ['offline-cpu', 'online-cpu', 'offline-gpu', 'offline-gpu']
+        this.tag = ['offline', 'online']
         switch (process.env.CLUSTER_TYPE) {
             case 'DockerSwarm': this.cluster = require(`./DockerSwarm`); break
             case 'Kubernetes': this.cluster = ''; break

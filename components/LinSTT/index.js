@@ -2,9 +2,9 @@ const Component = require(`../component.js`)
 const debug = require('debug')(`app:linstt`)
 const compressing = require('compressing');
 
-const am = require(`${process.cwd()}/models/AMUpdates`)
-const lm = require(`${process.cwd()}/models/LMUpdates`)
-const service = require(`${process.cwd()}/models/ServiceUpdates`)
+const am = require(`${process.cwd()}/models/models/AMUpdates`)
+const lm = require(`${process.cwd()}/models/models/LMUpdates`)
+const service = require(`${process.cwd()}/models/models/ServiceUpdates`)
 
 class LinSTT extends Component {
     constructor(app) {
@@ -12,6 +12,7 @@ class LinSTT extends Component {
         this.id = this.constructor.name
         this.app = app
         this.db = { am: am, lm: lm, service: service }
+        this.type = ['lvcsr', 'cmd']
         switch (process.env.LINSTT_SYS) {
             case 'kaldi':
                 this.stt = require(`./Kaldi`)
@@ -25,127 +26,113 @@ class LinSTT extends Component {
     /**
      * Other functions used by Acoustic and Language Model events
      */
+    verifType(type) {
+        if (this.type.indexOf(type) != -1) return 1
+        else return 0
+    }
+
+
     async uncompressFile(type, src, dest) {
         return new Promise(async (resolve, rejection) => {
             try {
-                switch (type) {
-                    case 'application/zip': // .zip
-                        await compressing.zip.uncompress(src, dest); break
-                    case 'application/gzip': // .tar.gz
-                        await compressing.tar.uncompress(src, dest); break
-                    case 'application/x-gzip': // .tar.gz
-                        await compressing.tgz.uncompress(src, dest); break
-                    default:
-                        rejection('Undefined file format. Please use one of the following format: zip or tar.gz')
-                }
-                resolve('uncompressed')
+                if (type == 'application/zip')
+                    compressing.zip.uncompress(src, dest).then(() => {
+                        resolve('uncompressed')
+                    }).catch(err => {
+                        rejection(err)
+                    })
+                else if (type == 'application/gzip')
+                    compressing.tar.uncompress(src, dest).then(() => {
+                        resolve('uncompressed')
+                    }).catch(err => {
+                        rejection(err)
+                    })
+                else if (type == 'application/x-gzip')
+                    compressing.tgz.uncompress(src, dest).then(() => {
+                        resolve('uncompressed')
+                    }).catch(err => {
+                        rejection(err)
+                    })
+                else rejection('Undefined file format. Please use one of the following format: zip or tar.gz')
             } catch (err) {
+                console.error("ERROR: " + err)
                 rejection(err)
             }
         })
     }
 
-    async checkExists(payload, type, isTrue) {
-        const res = await this.db.lm.findModel(payload.modelId)
-        if (res === -1)
-            throw `Language Model '${payload.modelId}' does not exist`
+    async checkExists(model, name, type, isTrue) {
+        let exist = 0
         if (isTrue) {
-            return new Promise((resolve, rejection) => {
-                res[type].forEach((obj, idx) => {
-                    obj.idx = idx
-                    if (obj.name === payload.name)
-                        resolve(obj)
-                })
-                rejection(`${payload.name} does not exist`)
+            model[type].forEach(async (obj, idx) => {
+                obj.idx = idx
+                if (obj.name == name)
+                    exist = obj
             })
         } else {
-            return new Promise((resolve, rejection) => {
-                res[type].forEach((obj) => {
-                    if (obj.name === payload.name)
-                        rejection(`${payload.name} already exists`)
-                })
-                resolve()
+            model[type].forEach((obj) => {
+                if (obj.name == name)
+                    exist = 1
             })
         }
+        return exist
     }
 
-    async generateModel(res,db) {
+    async generateModel(res, db) {
         try {
-            let data = {}
-            await this.stt.prepareParam(res.acmodelId, res.modelId).then(async ()=>{
+            await this.stt.prepareParam(res.acmodelId, res.modelId).then(async () => {
                 debug(`done prepareParam (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 1
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 1, 'In generation process')
             })
-            await this.stt.prepare_lex_vocab().then(async ()=>{
+            await this.stt.prepare_lex_vocab().then(async () => {
                 debug(`done prepare_lex_vocab (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 3
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 3, 'In generation process')
             })
-            await this.stt.prepare_intents(res.intents).then(async ()=>{
+            await this.stt.prepare_intents(res.intents).then(async () => {
                 debug(`done prepare_intents (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 8
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 8, 'In generation process')
             })
-            await this.stt.prepare_entities(res.entities).then(async ()=>{
+            await this.stt.prepare_entities(res.entities).then(async () => {
                 debug(`done prepare_entities (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 13
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 13, 'In generation process')
             })
 
             this.stt.check_entities()
             debug(`done check_entities (${this.stt.tmplmpath})`)
 
-            await this.stt.prepare_new_lexicon().then(async ()=>{
+            await this.stt.prepare_new_lexicon().then(async () => {
                 debug(`done prepare_new_lexicon (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 15
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 15, 'In generation process')
             })
-            await this.stt.generate_arpa().then(async ()=>{
+            await this.stt.generate_arpa().then(async () => {
                 debug(`done generate_arpa (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 20
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 20, 'In generation process')
             })
-            await this.stt.prepare_lang().then(async ()=>{
+            await this.stt.prepare_lang().then(async () => {
                 debug(`done prepare_lang (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 60
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 60, 'In generation process')
             })
             this.stt.generate_main_and_entities_HCLG(res.acmodelId)
-            await this.stt.check_previous_HCLG_creation().then(async ()=>{
+            await this.stt.check_previous_HCLG_creation().then(async () => {
                 debug(`done generate_main_and_entities_HCLG (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 90
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 90, 'In generation process')
             })
-            await this.stt.generate_final_HCLG(res.modelId).then(async ()=>{
+            await this.stt.generate_final_HCLG(res.modelId).then(async () => {
                 debug(`done generate_final_HCLG (${this.stt.tmplmpath})`)
-                data = {}
-                data.updateState = 100
-                await db.updateModel(res.modelId, data)
+                await db.generationState(res.modelId, 100, 'In generation process')
             })
             this.stt.removeTmpFolder()
 
-            data = {}
+            let data = {}
             data.isGenerated = 1
             data.updateState = 0
             data.isDirty = 0
             data.oov = this.stt.oov
-            data.updateStatus = `Language model '${res.modelId}' is successfully generated`
+            data.updateStatus = `Language model is successfully generated`
             await db.updateModel(res.modelId, data)
         } catch (err) {
             this.stt.removeTmpFolder()
-            let data = {}
-            data.updateState = -1
-            data.updateStatus = `Language model '${res.modelId}' is not generated. ERROR: ${err}`
-            await db.updateModel(res.modelId, data)
+            await db.generationState(res.modelId, -1, `ERROR: Not generated. ${err}`)
         }
     }
 }

@@ -9,7 +9,7 @@ module.exports = function () {
                 if (service.isOn) { //check if the service is running
                     const replicas = await this.cluster.serviceIsOn(service.serviceId)
                     if (replicas !== service.replicas) {
-                        await this.cluster.createService(service)
+                        await this.cluster.startService(service)
                         const check = await this.cluster.checkServiceOn(service)
                         if (check) {
                             this.emit("serviceStarted", { service: service.serviceId, port: process.env.LINSTT_PORT })
@@ -18,7 +18,7 @@ module.exports = function () {
                 } else { //
                     const replicas = await this.cluster.serviceIsOn(service.serviceId)
                     if (replicas > 0) {
-                        await this.cluster.deleteService(service.serviceId)
+                        await this.cluster.stopService(service.serviceId)
                     }
                 }
             })

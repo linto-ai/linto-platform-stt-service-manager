@@ -1,7 +1,6 @@
 const debug = require('debug')('app:main')
 const ora = require('ora')
 
-
 class App {
     constructor() {
         try {
@@ -14,9 +13,7 @@ class App {
                 return prev.then(async () => { await this.use(componentFolderName) })
             }, Promise.resolve()).then(() => {
                 // Do some stuff after all components being loaded
-                require(`${process.cwd()}/models/MongoDB`).initPool().then(() => {
-                    this.components['ClusterManager'].emit('verifServices')
-                })
+                this.components['ClusterManager'].emit('verifServices')
             })
         } catch (e) {
             console.error(debug.namespace, e)

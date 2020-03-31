@@ -67,10 +67,10 @@ class DockerSwarm {
                 const service = await docker.listContainers({
                     "filters": { "label": [`com.docker.swarm.service.name=${params.serviceId}`] }
                 })
-                if (service.length === 0)
+                if (service.length == 0)
                     retries = retries - 1
                 debug(service.length, params.replicas)
-                if (service.length === params.replicas) {
+                if (service.length == params.replicas) {
                     status = 1
                     break
                 } else if (retries === 0) {
@@ -116,7 +116,7 @@ class DockerSwarm {
         })
     }
 
-    createService(params) {
+    startService(params) {
         return new Promise((resolve, reject) => {
             try {
                 const options = this.serviceOption(params)
@@ -141,6 +141,7 @@ class DockerSwarm {
                 await service.update(newSpec)
                 resolve()
             } catch (err) {
+                debug(err)
                 reject(err)
             }
         })
@@ -150,7 +151,7 @@ class DockerSwarm {
     reloadService() {
     }
 
-    async deleteService(serviceId) {
+    async stopService(serviceId) {
         return new Promise(async (resolve, reject) => {
             try {
                 const info = await docker.listContainers({

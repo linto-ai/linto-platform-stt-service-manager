@@ -1,10 +1,9 @@
 const debug = require('debug')('app:router:element')
 const multer = require('multer')
 const uploads = multer({ dest: process.env.TEMP_FILE_PATH }).single('file')
-
-function answer(out, res) {
-    if (out.bool) res.json(out.msg)
-    else { res.status(400); res.json(out.msg) }
+const middlewares = require(`${process.cwd()}/components/WebServer/middlewares/index.js`)
+const answer = (ans, req) => {
+    middlewares.answer(ans, req)
 }
 
 module.exports = (webserver,type) => {

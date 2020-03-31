@@ -58,7 +58,6 @@ module.exports = (webserver) => {
         requireAuth: false,
         controller:
             async (req, res, next) => {
-                req.params.replicas = parseInt(req.params.replicas)
                 webserver.emit("scaleService", (ans) => { answer(ans, res) }, req.params)
             }
     },
@@ -129,15 +128,6 @@ module.exports = (webserver) => {
         controller:
             async (req, res, next) => {
                 webserver.emit("getModeService", (ans) => { answer(ans, res) }, req.params.serviceId)
-            }
-    },
-    {
-        path: '/test',
-        method: 'get',
-        requireAuth: false,
-        controller:
-            async (req, res, next) => {
-                webserver.emit("testroute", (ans) => { answer(ans, res) }, req.params.serviceId)
             }
     }]
 }

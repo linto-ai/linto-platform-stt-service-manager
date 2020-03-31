@@ -77,7 +77,6 @@ class Kaldi {
             }
             return true
         } catch (err) {
-            debug(err)
             return false
         }
     }
