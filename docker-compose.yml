@@ -3,20 +3,21 @@ version: '3.5'
 services:
 
   stt-service-manager:
-    image: my_stt_manager:latest
+    image: service-manager:latest
     depends_on:
       - mongodb-stt-service-manager
     volumes:
-      - ./model:/opt/model
-      - ./config/nginx.conf:/opt/nginx/nginx.conf
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./config/swagger.yml:/opt/swagger.yml
+      - ${LINTO_SHARED_MOUNT}/.dbdata:/data/db
+      - ${LINTO_SHARED_MOUNT}/.dbbackup:/data/backup
+      - ${LINTO_SHARED_MOUNT}/model:/opt/model
+      - ${LINTO_STT_SERVICE_CONFIG}/nginx.conf:/opt/nginx/nginx.conf
+      - ${LINTO_STT_SERVICE_CONFIG}/swagger.yml:/opt/swagger.yml
+      - ${LINSTO_DOCKER.SOCK}:/var/run/docker.sock
     ports:
       - target: 80
         published: 8080
       - target: 8001
         published: 8081
-
     env_file: .env
     networks:
       - linto-net
@@ -24,8 +25,9 @@ services:
   mongodb-stt-service-manager:
     image: mongo:latest
     volumes:
-      - ./model/dbdata:/data/db
-      - ./config/seed:/docker-entrypoint-initdb.d
+      - ${LINTO_SHARED_MOUNT}/.dbdata:/data/db
+      - ${LINTO_SHARED_MOUNT}/.dbbackup:/data/backup
+      - ${LINTO_STT_SERVICE_CONFIG}/seed:/docker-entrypoint-initdb.d
     environment:
       MONGO_INITDB_DATABASE: linSTTAdmin
     networks:
