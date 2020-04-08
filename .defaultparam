@@ -1,5 +1,5 @@
 # Components loading in this order
-COMPONENTS=WebServer,LinSTT,ClusterManager,IngressController
+COMPONENTS=WebServer,ServiceManager,LinSTT,ClusterManager,IngressController
 WEBSERVER_HTTP_PORT=8000
 WEBSOCKET_PORT=8001
 
