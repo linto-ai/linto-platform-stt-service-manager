@@ -1,0 +1,1120 @@
+swagger: "2.0"
+
+info:
+  version: 1.0.0
+  title: LinSTT
+  description: A simple way to test LinSTT API, and to learn how to use API
+
+schemes:
+  - http
+host: localhost:8000
+basePath: /
+
+paths:
+  /service/{serviceId}/transcribe:
+    post:
+      tags:
+        - "Speech-To-Text API"
+      summary: Perform Speech-to-Text
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters: 
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      - name: "wavFile"
+        in: "formData"
+        description: "Wave File"
+        required: true
+        type: "file"
+      responses:
+        200:
+          description: Successfully transcribe the audio
+          schema:
+            type: "object"
+            properties:
+              transcript:
+                type: "object"
+                properties:
+                  transcription:
+                    type: "string"
+                  uuid:
+                    type: "string"
+                  confidence_score:
+                    type: "number"
+        503:
+          description: Worker failed to transcribe the audio
+          schema:
+            type: "object"
+            properties:
+              transcript:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+                  uuid:
+                    type: "string"
+  /service/{serviceId}:
+    post:
+      tags:
+        - "Service Manager APIs"
+      summary: Create the service by serviceId
+      produces:
+      - "application/json"
+      parameters: 
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      - name: "replicas"
+        in: "path"
+        description: "number of replicas"
+        required: true
+        schema:
+          type: "string"
+      - name: "tag"
+        in: "path"
+        description: "Service mode"
+        required: true
+        schema:
+          type: "string"
+      - name: "languageModel"
+        in: "path"
+        description: "Language model to use"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Service 'serviceId' is successfully created
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    put:
+      tags:
+        - "Service Manager APIs"
+      summary: Update the service by serviceId
+      produces:
+      - "application/json"
+      parameters: 
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      - name: "replicas"
+        in: "path"
+        description: "number of replicas"
+        required: true
+        schema:
+          type: "string"
+      - name: "tag"
+        in: "path"
+        description: "Service mode"
+        required: true
+        schema:
+          type: "string"
+      - name: "languageModel"
+        in: "path"
+        description: "Language model to use"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Service 'serviceId' is successfully update
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    delete:
+      tags:
+        - "Service Manager APIs"
+      summary: delete the service by serviceId
+      produces:
+      - "application/json"
+      parameters: 
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Service 'serviceId' is successfully removed
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    get:
+      tags:
+        - "Service Manager APIs"
+      summary: get the service information by serviceId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /service/{serviceId}/replicas:
+    get:
+      tags:
+        - "Service Manager APIs"
+      summary: get the number of replicas by serviceId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /service/{serviceId}/mode:
+    get:
+      tags:
+        - "Service Manager APIs"
+      summary: get the decoding mode by serviceId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /services:
+    get:
+      tags:
+        - "Service Manager APIs"
+      summary: get all created services
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: Json document
+  /service/{serviceId}/start:
+    post:
+      tags:
+        - "Service Runtime APIs"
+      summary: start service by serviceId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Service 'serviceId' is successfully started
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /service/{serviceId}/stop:
+    post:
+      tags:
+        - "Service Runtime APIs"
+      summary: stop service by serviceId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Service 'serviceId' is successfully stopped
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /service/{serviceId}/scale/{replicas}:
+    post:
+      tags:
+        - "Service Runtime APIs"
+      summary: start service by serviceId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Service name"
+        required: true
+        schema:
+          type: "string"
+      - name: "replicas"
+        in: "path"
+        description: "Number of replicas"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Service 'serviceId' is successfully scaled up/down
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /services/running:
+    get:
+      tags:
+        - "Service Runtime APIs"
+      summary: get all started services
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: Json document
+
+
+  /acmodel/{modelId}:
+    post:
+      tags:
+        - "Acoustic Model Management"
+      summary: Create the acoustic model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "file"
+        in: "formData"
+        description: "Model File"
+        required: false
+        type: "file"
+      - name: "link"
+        in: "path"
+        description: "Link to Model file"
+        required: false
+        schema:
+          type: "string"
+      - name: "lang"
+        in: "path"
+        description: "Model language"
+        required: true
+        schema:
+          type: "string"
+      - name: "desc"
+        in: "path"
+        description: "Description"
+        required: false
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Acoustic Model 'modelId' is successfully created
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    delete:
+      tags:
+        - "Acoustic Model Management"
+      summary: Delete the acoustic model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Acoustic Model 'modelId' is successfully removed
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    get:
+      tags:
+        - "Acoustic Model Management"
+      summary: get the acoustic model information by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /acmodels:
+    get:
+      tags:
+        - "Acoustic Model Management"
+      summary: get all created acoustic models
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: Json document
+
+
+  /langmodel/{modelId}:
+    post:
+      tags:
+        - "Language Model Management"
+      summary: Create the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "file"
+        in: "formData"
+        description: "Model File"
+        required: false
+        type: "file"
+      - name: "link"
+        in: "path"
+        description: "Link to Model file"
+        required: false
+        schema:
+          type: "string"
+      - name: "lmodelId"
+        in: "path"
+        description: "Existing language model"
+        required: false
+        schema:
+          type: "string"
+      - name: "lang"
+        in: "path"
+        description: "Model language"
+        required: false
+        schema:
+          type: "string"
+      - name: "acousticModel"
+        in: "path"
+        description: "Existing acoustic model"
+        required: false
+        schema:
+          type: "string"
+      - name: "data"
+        in: "path"
+        description: "Language model content (intents/entities)"
+        required: false
+        schema:
+          type: "Object"
+      responses:
+        200:
+          description: Language Model 'modelId' is successfully created
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    delete:
+      tags:
+        - "Language Model Management"
+      summary: Delete the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Language Model 'modelId' is successfully removed
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    get:
+      tags:
+        - "Language Model Management"
+      summary: get the language model information by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+
+  /langmodel/{modelId}/generate/graph:
+    post:
+      tags:
+        - "Language Model Management"
+      summary: Generate the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Language Model 'modelId' is successfully generated
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /langmodels:
+    get:
+      tags:
+        - "Language Model Management"
+      summary: get all created language models
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: Json document
+
+
+
+  /langmodel/{modelId}/entity/{name}:
+    post:
+      tags:
+        - "Language Model 'Entity' Management"
+      summary: Add entity to the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Entity Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "file"
+        in: "formData"
+        description: "Entity File"
+        required: false
+        type: "file"
+      - name: "entity"
+        in: "path"
+        description: "Entity items"
+        required: false
+        schema:
+          type: "Object"
+      responses:
+        200:
+          description: The entity 'name' of the Language Model 'modelId' is successfully created
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    put:
+      tags:
+        - "Language Model 'Entity' Management"
+      summary: Reset entity of the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Entity Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "file"
+        in: "formData"
+        description: "Entity File"
+        required: false
+        type: "file"
+      - name: "entity"
+        in: "path"
+        description: "Entity items"
+        required: false
+        schema:
+          type: "Object"
+      responses:
+        200:
+          description: The entity 'name' of the Language Model 'modelId' is successfully replaced
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    patch:
+      tags:
+        - "Language Model 'Entity' Management"
+      summary: Update entity of the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Entity Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "file"
+        in: "formData"
+        description: "Entity File"
+        required: false
+        type: "file"
+      - name: "entity"
+        in: "path"
+        description: "Entity items"
+        required: false
+        schema:
+          type: "Object"
+      responses:
+        200:
+          description: The entity 'name' of the Language Model 'modelId' is successfully updated
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    delete:
+      tags:
+        - "Language Model 'Entity' Management"
+      summary: delete entity of the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Entity Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: The entity 'name' of the Language Model 'modelId' is successfully removed
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    get:
+      tags:
+        - "Language Model 'Entity' Management"
+      summary: get the entity information of the language model by modelId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Entity Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /langmodel/{modelId}/entities:
+    get:
+      tags:
+        - "Language Model 'Entity' Management"
+      summary: get all entities of the language model by modelId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+
+                
+
+  /langmodel/{modelId}/intent/{name}:
+    post:
+      tags:
+        - "Language Model 'Intent' Management"
+      summary: Add intent to the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Intent Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "file"
+        in: "formData"
+        description: "intent File"
+        required: false
+        type: "file"
+      - name: "intent"
+        in: "path"
+        description: "intent items"
+        required: false
+        schema:
+          type: "Object"
+      responses:
+        200:
+          description: The intent 'name' of the Language Model 'modelId' is successfully created
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    put:
+      tags:
+        - "Language Model 'Intent' Management"
+      summary: Reset intent of the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Intent Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "file"
+        in: "formData"
+        description: "intent File"
+        required: false
+        type: "file"
+      - name: "intent"
+        in: "path"
+        description: "intent items"
+        required: false
+        schema:
+          type: "Object"
+      responses:
+        200:
+          description: The intent 'name' of the Language Model 'modelId' is successfully replaced
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    patch:
+      tags:
+        - "Language Model 'Intent' Management"
+      summary: Update intent of the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Intent Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "file"
+        in: "formData"
+        description: "intent File"
+        required: false
+        type: "file"
+      - name: "intent"
+        in: "path"
+        description: "intent items"
+        required: false
+        schema:
+          type: "Object"
+      responses:
+        200:
+          description: The intent 'name' of the Language Model 'modelId' is successfully updated
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    delete:
+      tags:
+        - "Language Model 'Intent' Management"
+      summary: delete intent of the language model by modelId
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Intent Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: The intent 'name' of the Language Model 'modelId' is successfully removed
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+    get:
+      tags:
+        - "Language Model 'Intent' Management"
+      summary: get the intent information of the language model by modelId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      - name: "name"
+        in: "path"
+        description: "Intent Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+  /langmodel/{modelId}/intents:
+    get:
+      tags:
+        - "Language Model 'Intent' Management"
+      summary: get all intents of the language model by modelId
+      produces:
+      - "application/json"
+      parameters:
+      - name: "modelId"
+        in: "path"
+        description: "Model Name"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: Json document
+        400:
+          description: Error message
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
