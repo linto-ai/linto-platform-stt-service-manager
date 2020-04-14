@@ -37,18 +37,31 @@ RUN cd /opt/kaldi/src && \
 
 RUN /bin/bash -c "cd /opt/kaldi/src && /bin/rm */*{.a,.o}"
 
+
+
+## Install main npm modules
 WORKDIR /usr/src/app
-COPY package.json ./
+COPY ./package.json ./
 RUN npm install
 
-COPY . .
 
-RUN mkdir /opt/model /opt/nginx && \
-    cp -r /opt/kaldi/egs/wsj/s5/utils components/LinSTT/Kaldi/scripts
+## Prepare work directories
+COPY ./components ./components
+COPY ./lib ./lib
+COPY ./models /usr/src/app/models
+COPY ./app.js ./config.js ./.defaultparam ./docker-healthcheck.js ./docker-entrypoint.sh ./wait-for-it.sh ./
+RUN mkdir /opt/model /opt/nginx && cp -r /opt/kaldi/egs/wsj/s5/utils ./components/LinSTT/Kaldi/scripts/
 
-RUN touch /opt/swagger.yml && cd /usr/src/app/components/WebServer/public/apidoc && rm -f swagger.yml && ln -s /opt/swagger.yml .
+
+
 
 ENV PATH /opt/kaldi/egs/wsj/s5/utils:/opt/kaldi/tools/openfst/bin:/opt/kaldi/src/fstbin:/opt/kaldi/src/lmbin:/opt/kaldi/src/bin:/opt/kaldi/tools/phonetisaurus-g2p/src/scripts:/opt/kaldi/tools/phonetisaurus-g2p:/opt/kaldi/tools/sequitur-g2p/g2p.py:/opt/kaldi/tools/irstlm/bin:$PATH
 
 EXPOSE 80
-CMD [ "npm", "start" ]
+
+HEALTHCHECK CMD node docker-healthcheck.js || exit 1
+
+# Entrypoint handles the passed arguments
+ENTRYPOINT ["./docker-entrypoint.sh"]
+
+#CMD [ "npm", "start" ]
