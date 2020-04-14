@@ -35,7 +35,7 @@ class DockerSwarm {
                 },
                 "Networks": [
                     {
-                        "Target": process.env.DOCKER_EXTERNAL_NET
+                        "Target": process.env.LINSTT_NETWORK
                     }
                 ]
             },
@@ -59,7 +59,7 @@ class DockerSwarm {
     async checkServiceOn(params) { //check if service is correctly started
         try {
             const time = 0.5 //in seconds
-            let retries = process.env.DOCKER_TIMEOUT / time
+            let retries = process.env.CHECK_SERVICE_TIMEOUT / time
             let status = {}
 
             while (retries > 0) {

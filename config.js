@@ -16,9 +16,8 @@ function configureDefaults() {
     try {
         dotenv.config() // loads process.env from .env file (if not specified by the system)
         const envdefault = dotenv.parse(fs.readFileSync('.defaultparam')) // default usable values
-        process.env.COMPONENTS = ifHas(process.env.COMPONENTS, envdefault.COMPONENTS)
-        process.env.WEBSERVER_HTTP_PORT = ifHas(process.env.WEBSERVER_HTTP_PORT, envdefault.WEBSERVER_HTTP_PORT)
-        process.env.FILESYSTEM = ifHasNotThrow(process.env.FILESYSTEM, 'No FILESYSTEM param found. Please edit ".env" file')
+        process.env.COMPONENTS = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_COMPONENTS, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_COMPONENTS)
+        process.env.WEBSERVER_HTTP_PORT = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_HTTP_PORT, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_HTTP_PORT)
         process.env.SAVE_MODELS_PATH = ifHas(process.env.SAVE_MODELS_PATH, envdefault.SAVE_MODELS_PATH)
         process.env.LM_FOLDER_NAME = ifHas(process.env.LM_FOLDER_NAME, envdefault.LM_FOLDER_NAME)
         process.env.LM_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.LM_FOLDER_NAME}`
@@ -26,40 +25,40 @@ function configureDefaults() {
         process.env.AM_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.AM_FOLDER_NAME}`
         process.env.TEMP_FOLDER_NAME = ifHas(process.env.TEMP_FOLDER_NAME, envdefault.TEMP_FOLDER_NAME)
         process.env.TEMP_FILE_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.TEMP_FOLDER_NAME}`
-        process.env.WHITELIST_DOMAINS = ifHasNotThrow(process.env.WHITELIST_DOMAINS, 'No whitelist found. Please edit ".env" file')
-        
+        process.env.FILESYSTEM = ifHasNotThrow(process.env.LINTO_SHARED_MOUNT, 'No FILESYSTEM param found. Please edit ".env" file')
+
         //Dictionary parameters
         process.env.DICT_DELIMITER = ifHas(process.env.DICT_DELIMITER, envdefault.DICT_DELIMITER)
         process.env.LANGUAGE = ifHas(process.env.LANGUAGE, envdefault.LANGUAGE)
         process.env.NGRAM = ifHas(process.env.NGRAM, envdefault.NGRAM)
 
-        //MongoDB
-        process.env.MONGODB_HOST = ifHas(process.env.MONGODB_HOST, envdefault.MONGODB_HOST)
-        process.env.MONGODB_PORT = ifHas(process.env.MONGODB_PORT, envdefault.MONGODB_PORT)
-        process.env.MONGODB_DBNAME_SMANAGER = ifHas(process.env.MONGODB_DBNAME_SMANAGER, envdefault.MONGODB_DBNAME_SMANAGER)
-        process.env.MONGODB_REQUIRE_LOGIN = ifHas(process.env.MONGODB_REQUIRE_LOGIN, envdefault.MONGODB_REQUIRE_LOGIN)
-        process.env.MONGODB_USER = ifHas(process.env.MONGODB_USER, envdefault.MONGODB_USER)
-        process.env.MOGODB_PSWD = ifHas(process.env.MOGODB_PSWD, envdefault.MOGODB_PSWD)
-
         //Cluster Manager
-        process.env.CLUSTER_TYPE = ifHas(process.env.CLUSTER_TYPE, envdefault.CLUSTER_TYPE)
+        process.env.CLUSTER_TYPE = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_CLUSTER_MANAGER, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_CLUSTER_MANAGER)
         //Ingress Controller
-        process.env.INGRESS_CONTROLLER = ifHas(process.env.INGRESS_CONTROLLER, envdefault.INGRESS_CONTROLLER)
+        process.env.INGRESS_CONTROLLER = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_INGRESS_CONTROLLER, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_INGRESS_CONTROLLER)
+        //LinSTT Toolkit
+        process.env.LINSTT_SYS = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_LINSTT_TOOLKIT, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_LINSTT_TOOLKIT)
+
+        //DOCKER settings
+        process.env.DOCKER_SOCKET_PATH = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_DOCKER_SOCKET, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_DOCKER_SOCKET)
+        process.env.CHECK_SERVICE_TIMEOUT = ifHas(process.env.CHECK_SERVICE_TIMEOUT, envdefault.CHECK_SERVICE_TIMEOUT)
 
         //NGINX
-        process.env.NGINX_CONF_PATH = ifHas(process.env.NGINX_CONF_PATH, envdefault.NGINX_CONF_PATH)
-        process.env.NGINX_SERVICE_ID = ifHas(process.env.NGINX_SERVICE_ID, envdefault.NGINX_SERVICE_ID)
+        process.env.NGINX_CONF_PATH = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_NGINX_CONF, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_NGINX_CONF)
+        process.env.NGINX_SERVICE_ID = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_NGINX_HOST, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_NGINX_HOST)
 
-        //DOCKER SWARM
-        process.env.DOCKER_SOCKET_PATH = ifHas(process.env.DOCKER_SOCKET_PATH, envdefault.DOCKER_SOCKET_PATH)
-        process.env.DOCKER_EXTERNAL_NET = ifHas(process.env.DOCKER_EXTERNAL_NET, envdefault.DOCKER_EXTERNAL_NET)
-        process.env.DOCKER_TIMEOUT = ifHas(process.env.DOCKER_TIMEOUT, envdefault.DOCKER_TIMEOUT)
+        //MongoDB
+        process.env.MONGODB_HOST = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_HOST, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_HOST)
+        process.env.MONGODB_PORT = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PORT, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PORT)
+        process.env.MONGODB_DBNAME_SMANAGER = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_DBNAME, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_DBNAME)
+        process.env.MONGODB_REQUIRE_LOGIN = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_REQUIRE_LOGIN, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_REQUIRE_LOGIN)
+        process.env.MONGODB_USER = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_USER, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_USER)
+        process.env.MOGODB_PSWD = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MOGODB_PSWD, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MOGODB_PSWD)
 
         //LINSTT
-        process.env.LINSTT_SYS = ifHas(process.env.LINSTT_SYS, envdefault.LINSTT_SYS)
-        process.env.LINSTT_IMAGE = ifHas(process.env.LINSTT_IMAGE, envdefault.LINSTT_IMAGE)
-        process.env.LINSTT_PORT = ifHas(process.env.LINSTT_PORT, envdefault.LINSTT_PORT)
-
+        process.env.LINSTT_IMAGE = ifHas(process.env.LINTO_STACK_LINSTT_IMAGE, envdefault.LINTO_STACK_LINSTT_IMAGE)
+        process.env.LINSTT_PORT = ifHas(process.env.LINTO_STACK_LINSTT_PORT, envdefault.LINTO_STACK_LINSTT_PORT)
+        process.env.LINSTT_NETWORK = ifHas(process.env.LINTO_STACK_LINSTT_NETWORK, envdefault.LINTO_STACK_LINSTT_NETWORK)
 
         //create the AM folder if it does not exist
         if (!fs.existsSync(process.env.AM_PATH))
@@ -73,6 +72,7 @@ function configureDefaults() {
         if (!fs.existsSync(process.env.TEMP_FILE_PATH))
             fs.mkdirSync(process.env.TEMP_FILE_PATH)
 
+        //process.env.WHITELIST_DOMAINS = ifHasNotThrow(process.env.WHITELIST_DOMAINS, 'No whitelist found. Please edit ".env" file')
         //process.env.COMPONENTS = ifHasNotThrow(process.env.COMPONENTS, Error("No COMPONENTS env_var specified"))
     } catch (e) {
         console.error(debug.namespace, e)
