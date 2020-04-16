@@ -4,6 +4,11 @@ set -e
 echo "Waiting mongo..."
 ./wait-for-it.sh $LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_HOST:$LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PORT --timeout=20 --strict -- echo " $LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_HOST:$LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PORT is up"
 
+if [ ${LINTO_STACK_STT_SERVICE_MANAGER_INGRESS_CONTROLLER} == "nginx" ]; then
+    echo "Waiting nginx..."
+    ./wait-for-it.sh $LINTO_STACK_STT_SERVICE_MANAGER_NGINX_HOST:80 --timeout=20 --strict -- echo " $LINTO_STACK_STT_SERVICE_MANAGER_NGINX_HOST:80 is up"
+fi
+
 while [ "$1" != "" ]; do
     case $1 in
     --run-cmd)

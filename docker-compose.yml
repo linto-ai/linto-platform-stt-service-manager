@@ -7,13 +7,13 @@ services:
     depends_on:
       - mongodb-stt-service-manager
     volumes:
-      - ${LINTO_SHARED_MOUNT}:/opt/model
+      - ${LINTO_STACK_STT_SERVICE_MANAGER_DIRECTORY}:/opt/model
       - ./config/nginx.conf:/opt/nginx/nginx.conf
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - target: 8000
-        published: 8000
+      - target: 80
+        published: 80
     deploy:
       mode: replicated
       replicas: 1
@@ -35,8 +35,8 @@ services:
   mongodb-stt-service-manager:
     image: mongo:latest
     volumes:
-      - ${LINTO_SHARED_MOUNT}/dbdata:/data/db
-      - ${LINTO_SHARED_MOUNT}/dbbackup:/data/backup
+      - ${LINTO_STACK_STT_SERVICE_MANAGER_DIRECTORY}/dbdata:/data/db
+      - ${LINTO_STACK_STT_SERVICE_MANAGER_DIRECTORY}/dbbackup:/data/backup
       - ./config/seed:/docker-entrypoint-initdb.d
     environment:
       MONGO_INITDB_DATABASE: linSTTAdmin

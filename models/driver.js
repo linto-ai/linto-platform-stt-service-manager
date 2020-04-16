@@ -1,7 +1,7 @@
 const mongoDb = require('mongodb')
 let urlMongo = 'mongodb://'
 if (process.env.MONGODB_REQUIRE_LOGIN) {
-    urlMongo += process.env.MONGODB_USER + ':' + process.env.MOGODB_PSWD + '@'
+    urlMongo += process.env.MONGODB_USER + ':' + process.env.MONGODB_PSWD + '@'
 }
 urlMongo += process.env.MONGODB_HOST + ':' + process.env.MONGODB_PORT + '/'
 if (process.env.MONGODB_REQUIRE_LOGIN) {

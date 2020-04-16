@@ -25,7 +25,7 @@ function configureDefaults() {
         process.env.AM_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.AM_FOLDER_NAME}`
         process.env.TEMP_FOLDER_NAME = ifHas(process.env.TEMP_FOLDER_NAME, envdefault.TEMP_FOLDER_NAME)
         process.env.TEMP_FILE_PATH = `${process.env.SAVE_MODELS_PATH}/${process.env.TEMP_FOLDER_NAME}`
-        process.env.FILESYSTEM = ifHasNotThrow(process.env.LINTO_SHARED_MOUNT, 'No FILESYSTEM param found. Please edit ".env" file')
+        process.env.FILESYSTEM = ifHasNotThrow(process.env.LINTO_STACK_STT_SERVICE_MANAGER_DIRECTORY, 'No LINTO_STACK_STT_SERVICE_MANAGER_DIRECTORY found. Please edit ".env" file')
 
         //Dictionary parameters
         process.env.DICT_DELIMITER = ifHas(process.env.DICT_DELIMITER, envdefault.DICT_DELIMITER)
@@ -53,7 +53,7 @@ function configureDefaults() {
         process.env.MONGODB_DBNAME_SMANAGER = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_DBNAME, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_DBNAME)
         process.env.MONGODB_REQUIRE_LOGIN = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_REQUIRE_LOGIN, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_REQUIRE_LOGIN)
         process.env.MONGODB_USER = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_USER, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_USER)
-        process.env.MOGODB_PSWD = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MOGODB_PSWD, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MOGODB_PSWD)
+        process.env.MONGODB_PSWD = ifHas(process.env.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PSWD, envdefault.LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PSWD)
 
         //LINSTT
         process.env.LINSTT_IMAGE = ifHas(process.env.LINTO_STACK_LINSTT_IMAGE, envdefault.LINTO_STACK_LINSTT_IMAGE)
