@@ -60,6 +60,13 @@ function configureDefaults() {
         process.env.LINSTT_PORT = ifHas(process.env.LINTO_STACK_LINSTT_PORT, envdefault.LINTO_STACK_LINSTT_PORT)
         process.env.LINSTT_NETWORK = ifHas(process.env.LINTO_STACK_LINSTT_NETWORK, envdefault.LINTO_STACK_LINSTT_NETWORK)
 
+
+        // Extrat parameters required when traefik is used
+        if (process.env.INGRESS_CONTROLLER == "traefik") {
+            process.env.LINTO_STACK_DOMAIN = ifHasNotThrow(process.env.LINTO_STACK_DOMAIN, 'No LINTO_STACK_DOMAIN found. Please edit ".env" file')
+            process.env.LINTO_STACK_LINSTT_PREFIX = ifHasNotThrow(process.env.LINTO_STACK_LINSTT_PREFIX, 'No LINTO_STACK_LINSTT_PREFIX found. Please edit ".env" file')
+        }
+
         //create the AM folder if it does not exist
         if (!fs.existsSync(process.env.AM_PATH))
             fs.mkdirSync(process.env.AM_PATH)

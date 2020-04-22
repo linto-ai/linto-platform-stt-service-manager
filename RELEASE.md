@@ -1,2 +1,2 @@
-# 1.0.0
-- First build of LinTO-Platform-stt-service-manager
+# 1.1.0
+- New Feature: Add Traefik component as an ingress controller
