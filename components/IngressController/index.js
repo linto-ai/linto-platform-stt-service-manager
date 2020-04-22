@@ -10,7 +10,7 @@ class IngressController extends Component {
             case 'nginx':
                 this.ingress = require(`./Nginx`)
                 break
-            case 'apach': this.ingress = ''; break
+            case 'traefik': this.ingress = ''; break
             default: throw 'Undefined INGRESS controller'
         }
         return this.init()
