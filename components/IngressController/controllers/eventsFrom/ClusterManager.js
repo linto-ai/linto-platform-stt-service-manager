@@ -35,7 +35,7 @@ module.exports = function () {
     if (process.env.INGRESS_CONTROLLER == "traefik") {
         this.app.components['ClusterManager'].on('serviceStarted', async (info) => {
             try {
-                await this.ingress.addLabels(info.service)
+                await this.ingress.addLabels(info.service, info.tag)
             } catch (err) {
                 console.error(err)
             }
