@@ -38,7 +38,6 @@ RUN cd /opt/kaldi/src && \
 RUN /bin/bash -c "cd /opt/kaldi/src && /bin/rm */*{.a,.o}"
 
 
-
 ## Install main npm modules
 WORKDIR /usr/src/app
 COPY ./package.json ./
@@ -49,10 +48,8 @@ RUN npm install
 COPY ./components ./components
 COPY ./lib ./lib
 COPY ./models /usr/src/app/models
-COPY ./app.js ./config.js ./.defaultparam ./docker-healthcheck.js ./docker-entrypoint.sh ./wait-for-it.sh ./
+COPY ./app.js ./config.js ./.defaultparam ./docker-healthcheck.js ./docker-entrypoint.sh ./wait-for-it.sh ./swagger.yml ./
 RUN mkdir /opt/model /opt/nginx && cp -r /opt/kaldi/egs/wsj/s5/utils ./components/LinSTT/Kaldi/scripts/
-
-
 
 
 ENV PATH /opt/kaldi/egs/wsj/s5/utils:/opt/kaldi/tools/openfst/bin:/opt/kaldi/src/fstbin:/opt/kaldi/src/lmbin:/opt/kaldi/src/bin:/opt/kaldi/tools/phonetisaurus-g2p/src/scripts:/opt/kaldi/tools/phonetisaurus-g2p:/opt/kaldi/tools/sequitur-g2p/g2p.py:/opt/kaldi/tools/irstlm/bin:$PATH

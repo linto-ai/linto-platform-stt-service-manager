@@ -154,13 +154,8 @@ class DockerSwarm {
     async stopService(serviceId) {
         return new Promise(async (resolve, reject) => {
             try {
-                const info = await docker.listContainers({
-                    "filters": { "label": [`com.docker.swarm.service.name=${serviceId}`] }
-                })
-                if (info.length > 0) {
-                    const service = await docker.getService(serviceId)
-                    await service.remove()
-                }
+                const service = await docker.getService(serviceId)
+                await service.remove()
                 resolve()
             } catch (err) {
                 reject(err)

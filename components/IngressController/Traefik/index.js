@@ -12,13 +12,6 @@ class Traefik {
                 const spec = await service.inspect()
                 const newSpec = spec.Spec
                 newSpec.version = spec.Version.Index
-                /** 
-                traefik.enable: "true"
-                traefik.http.services.linto-platform-stt-service-manager.loadbalancer.server.port: 80
-                traefik.http.routers.linto-platform-stt-service-manager.entrypoints: "http"
-                traefik.http.routers.linto-platform-stt-service-manager.middlewares: "linto-stt-service-manager-path@file"
-                traefik.http.routers.linto-platform-stt-service-manager.rule: "Host(`${LINTO_STACK_DOMAIN}`) && PathPrefix(`/stt-manager`)"
-                */
 
                 //services & routers
                 const enableLable = `traefik.enable`
