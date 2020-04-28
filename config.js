@@ -60,6 +60,8 @@ function configureDefaults() {
         process.env.LINSTT_PORT = ifHas(process.env.LINTO_STACK_LINSTT_PORT, envdefault.LINTO_STACK_LINSTT_PORT)
         process.env.LINSTT_NETWORK = ifHas(process.env.LINTO_STACK_LINSTT_NETWORK, envdefault.LINTO_STACK_LINSTT_NETWORK)
 
+        //SWAGGER
+        process.env.SWAGGER_PATH = ifHasNotThrow(process.env.LINTO_STACK_STT_SERVICE_MANAGER_SWAGGER_PATH, 'No LINTO_STACK_STT_SERVICE_MANAGER_SWAGGER_PATH found. Please edit ".env" file')
 
         // Extrat parameters required when traefik is used
         if (process.env.INGRESS_CONTROLLER == "traefik") {

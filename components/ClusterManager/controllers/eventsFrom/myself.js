@@ -10,6 +10,7 @@ module.exports = function () {
                     if (service.isOn) { //check if the service is running
                         const replicas = await this.cluster.serviceIsOn(service.serviceId)
                         if (replicas !== service.replicas) {
+                            await this.cluster.stopService(service.serviceId).catch(err => {})
                             await this.cluster.startService(service)
                             const check = await this.cluster.checkServiceOn(service)
                             if (check) {

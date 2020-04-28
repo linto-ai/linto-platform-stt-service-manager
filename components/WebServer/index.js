@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
-const swaggerDocument = YAML.load(`${process.cwd()}/swagger.yml`);
+const swaggerDocument = YAML.load(process.env.SWAGGER_PATH);
 
 /*
 const CORS = require('cors')

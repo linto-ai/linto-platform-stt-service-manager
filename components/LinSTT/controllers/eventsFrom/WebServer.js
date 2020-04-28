@@ -267,7 +267,7 @@ module.exports = function () {
         try {
             const res = await this.db.am.findModel(modelId)
             if (!res) throw `Acoustic Model '${modelId}' does not exist`
-            return cb({ bool: true, msg: res[0] })
+            return cb({ bool: true, msg: res })
         } catch (err) {
             return cb({ bool: false, msg: err })
         }
