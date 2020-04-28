@@ -7,7 +7,7 @@ info:
 
 schemes:
   - http
-host: localhost:81
+host: localhost:8000
 basePath: /
 
 paths:
@@ -59,6 +59,8 @@ paths:
                     type: "string"
                   uuid:
                     type: "string"
+
+
   /service/{serviceId}:
     post:
       tags:
@@ -74,19 +76,20 @@ paths:
         schema:
           type: "string"
       - name: "replicas"
-        in: "path"
+        in: formData
         description: "number of replicas"
         required: true
         schema:
           type: "string"
       - name: "tag"
-        in: "path"
-        description: "Service mode"
+        in: "formData"
+        description: "Service transcription mode"
         required: true
-        schema:
-          type: "string"
+        type: "string"
+        enum: [ "offline", "online" ]
+        default: "offline"
       - name: "languageModel"
-        in: "path"
+        in: formData
         description: "Language model to use"
         required: true
         schema:
@@ -120,26 +123,25 @@ paths:
         schema:
           type: "string"
       - name: "replicas"
-        in: "path"
+        in: formData
         description: "number of replicas"
-        required: true
         schema:
           type: "string"
       - name: "tag"
-        in: "path"
-        description: "Service mode"
+        in: formData
+        description: "Service transcription mode"
         required: true
-        schema:
-          type: "string"
+        type: "string"
+        enum: [ "offline", "online" ]
+        default: "offline"
       - name: "languageModel"
-        in: "path"
+        in: formData
         description: "Language model to use"
-        required: true
         schema:
           type: "string"
       responses:
         200:
-          description: Service 'serviceId' is successfully update
+          description: Service 'serviceId' is successfully updated
           schema:
             type: "object"
             properties:
@@ -388,19 +390,19 @@ paths:
         required: false
         type: "file"
       - name: "link"
-        in: "path"
+        in: "formData"
         description: "Link to Model file"
         required: false
         schema:
           type: "string"
       - name: "lang"
-        in: "path"
+        in: "formData"
         description: "Model language"
         required: true
         schema:
           type: "string"
       - name: "desc"
-        in: "path"
+        in: "formData"
         description: "Description"
         required: false
         schema:
@@ -492,8 +494,6 @@ paths:
       tags:
         - "Language Model Management"
       summary: Create the language model by modelId
-      consumes:
-      - "multipart/form-data"
       produces:
       - "application/json"
       parameters:
@@ -509,35 +509,40 @@ paths:
         required: false
         type: "file"
       - name: "link"
-        in: "path"
+        in: "formData"
         description: "Link to Model file"
         required: false
         schema:
           type: "string"
+      - name: "data"
+        in: "body"
+        description: "Language model content (intents/entities)"
+        required: false
       - name: "lmodelId"
-        in: "path"
-        description: "Existing language model"
+        in: "formData"
+        description: "Create a copy of an existing language model"
         required: false
         schema:
           type: "string"
       - name: "lang"
-        in: "path"
+        in: "formData"
         description: "Model language"
         required: false
         schema:
           type: "string"
       - name: "acousticModel"
-        in: "path"
+        in: "formData"
         description: "Existing acoustic model"
         required: false
         schema:
           type: "string"
-      - name: "data"
-        in: "path"
-        description: "Language model content (intents/entities)"
-        required: false
-        schema:
-          type: "Object"
+      - name: "type"
+        in: "formData"
+        description: "Language model type: large vocabulary (lvcsr) or command (cmd)"
+        required: true
+        type: "string"
+        enum: [ "lvcsr", "cmd" ]
+        default: "cmd"
       responses:
         200:
           description: Language Model 'modelId' is successfully created
