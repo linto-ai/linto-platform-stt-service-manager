@@ -48,7 +48,7 @@ RUN npm install
 COPY ./components ./components
 COPY ./lib ./lib
 COPY ./models /usr/src/app/models
-COPY ./app.js ./config.js ./.defaultparam ./docker-healthcheck.js ./docker-entrypoint.sh ./wait-for-it.sh ./swagger.yml ./
+COPY ./app.js ./config.js ./.defaultparam ./docker-healthcheck.js ./docker-entrypoint.sh ./wait-for-it.sh ./
 RUN mkdir /opt/model /opt/nginx && cp -r /opt/kaldi/egs/wsj/s5/utils ./components/LinSTT/Kaldi/scripts/
 
 

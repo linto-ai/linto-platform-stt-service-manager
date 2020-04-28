@@ -55,7 +55,7 @@ class WebServer extends Component {
     })
 
     require('./routes/router.js')(this) // Loads all defined routes
-    this.express.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+    this.express.use('/api-doc', function(req, res, next){ debug('swagger API'); next()}, swaggerUi.serve, swaggerUi.setup(swaggerDocument))
     this.express.use((req, res, next) => {
       res.status(404)
       res.end()

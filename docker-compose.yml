@@ -11,6 +11,7 @@ services:
       - ./config/nginx.conf:/opt/nginx/nginx.conf
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/localtime:/etc/localtime:ro
+      - ./config/swagger.yml:/opt/swagger.yml
     ports:
       - target: 80
         published: 80
@@ -29,6 +30,8 @@ services:
     env_file: .env
     command: # Overrides CMD specified in dockerfile (none here, handled by entrypoint)
       - --run-cmd=npm run start
+    environment:
+      LINTO_STACK_STT_SERVICE_MANAGER_SWAGGER_PATH: /opt/swagger.yml
     networks:
       - linto-net
 
