@@ -14,7 +14,7 @@ module.exports = function () {
                             await this.cluster.startService(service)
                             const check = await this.cluster.checkServiceOn(service)
                             if (check) {
-                                this.emit("serviceStarted", { service: service.serviceId, port: process.env.LINSTT_PORT })
+                                this.emit("serviceStarted", { service: service.serviceId, port: process.env.LINSTT_PORT, tag: service.tag })
                             }
                         }
                     } else { //

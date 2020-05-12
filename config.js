@@ -67,6 +67,7 @@ function configureDefaults() {
         if (process.env.INGRESS_CONTROLLER == "traefik") {
             process.env.LINTO_STACK_DOMAIN = ifHasNotThrow(process.env.LINTO_STACK_DOMAIN, 'No LINTO_STACK_DOMAIN found. Please edit ".env" file')
             process.env.LINTO_STACK_LINSTT_PREFIX = ifHasNotThrow(process.env.LINTO_STACK_LINSTT_PREFIX, 'No LINTO_STACK_LINSTT_PREFIX found. Please edit ".env" file')
+            process.env.LINTO_STACK_LINSTT_PREFIX = process.env.LINTO_STACK_LINSTT_PREFIX.replace(/\//g,"")
         }
 
         //create the AM folder if it does not exist
