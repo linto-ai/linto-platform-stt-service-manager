@@ -1,2 +1,2 @@
-# 1.1.0
-- New Feature: Add Traefik component as an ingress controller
+# 1.1.1
+- Update Traefik component: add extras labels such as ssl and basicAuth
