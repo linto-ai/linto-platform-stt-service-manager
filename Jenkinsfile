@@ -15,9 +15,9 @@ pipeline {
             steps {
                 echo 'Publishing latest'
                 script {
-                    image = docker.build("--no-cache", env.DOCKER_HUB_REPO)
+                    image = docker.build("--no-cache", "-t ${env.DOCKER_HUB_REPO}")
                     VERSION = sh(
-                        returnStdout: true, 
+                        returnStdout: true,
                         script: "awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'"
                     ).trim()
 
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 echo 'Publishing unstable'
                 script {
-                    image = docker.build("--no-cache", env.DOCKER_HUB_REPO)
+                    image = docker.build("--no-cache", "-t ${env.DOCKER_HUB_REPO}")
                     VERSION = sh(
                         returnStdout: true, 
                         script: "awk -v RS='' '/#/ {print; exit}' RELEASE.md | head -1 | sed 's/#//' | sed 's/ //'"
