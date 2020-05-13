@@ -47,6 +47,8 @@ class Kaldi {
     constructor() {
         this.lang = process.env.LANGUAGE.split(',')
         this.lang = this.lang.map(s => s.trim())
+        this.graphError = false
+        this.graphMsg = ""
     }
 
     async getAMParams(acmodelId) {
@@ -387,15 +389,19 @@ class Kaldi {
         ncpPromise(this.langpath, mainG).then(async () => {
             try {
                 await sh(`arpa2fst --disambig-symbol=#0 --read-symbol-table=${this.langpath}/words.txt ${this.arpa} ${mainG}/G.fst`)
-                await sh(`mkgraph.sh --self-loop-scale 1.0 ${mainG} ${process.env.AM_PATH}/${acmodelId} ${this.graph}/main`)
+                await sh(`mkgraph.sh --self-loop-scale 1.0 ${mainG} ${process.env.AM_PATH}/${acmodelId} ${this.graph}_main`)
             } catch (err) {
-                throw 'Error during main HCLG graph generation'
+                this.graphError = true
+                this.graphMsg = 'Error during main HCLG graph generation'
+                debug('Error during main HCLG graph generation')
+                debug(err)
             }
         }).catch(err => { 
-            debug(err)
-            throw 'Error during main HCLG graph generation'
+            this.graphError = true
+            this.graphMsg = 'Error during main lang copy'
+            debug('Error during main lang copy')
         })
-
+        
         this.listentities.forEach((entity) => {
             const langG = `${this.langextraspath}/${entity}`
             const scriptShellPath = `${process.cwd()}/components/LinSTT/Kaldi/scripts`
@@ -405,12 +411,14 @@ class Kaldi {
                     await sh(`fstcompile ${this.entitypath}/${entity}.int | fstarcsort --sort_type=ilabel > ${langG}/G.fst`)
                     await sh(`mkgraph.sh --self-loop-scale 1.0 ${langG} ${process.env.AM_PATH}/${acmodelId} ${this.graph}/${entity}`)
                 } catch (err) {
-                    debug(err)
-                    throw 'Error during entities HCLG graph generation'
+                    this.graphError = true
+                    this.graphMsg = 'Error during entities HCLG graph generation'
+                    debug(`Error during entities HCLG graph generation: ${this.graph}/${entity}`)
                 }
-            }).catch(err => { 
-                debug(err)
-                throw 'Error during entities HCLG graph generation'
+            }).catch(err => {
+                this.graphError = true
+                this.graphMsg = 'Error during entities HCLG graph generation'
+                debug(`Error during entities HCLG graph generation: ${this.graph}/${entity}`)
             })
         })
     }
@@ -422,7 +430,7 @@ class Kaldi {
             debug('check_previous_HCLG_creation')
             retry = false
             try {
-                await fs.stat(`${this.graph}/main/HCLG.fst`)
+                await fs.stat(`${this.graph}_main/HCLG.fst`)
             } catch (err) {
                 retry = true
             }
@@ -434,6 +442,9 @@ class Kaldi {
                 }
             })
             await sleep(time * 1000)
+
+            if (this.graphError)
+                throw this.graphMsg
         }
         debug('wait until all files will be created on disk')
         await sleep(1000)
@@ -443,9 +454,9 @@ class Kaldi {
     async generate_final_HCLG(lgmodelId) {
         if (this.listentities.length == 0) {
             try {
-                await fs.copyFile(`${this.graph}/main/HCLG.fst`, `${process.env.LM_PATH}/${lgmodelId}`)
-                await fs.copyFile(`${this.graph}/main/words.txt`, `${process.env.LM_PATH}/${lgmodelId}`)
-                await fs.copyFile(`${this.graph}/main/phones/word_boundary.int`, `${process.env.LM_PATH}/${lgmodelId}`)
+                await fs.copyFile(`${this.graph}_main/HCLG.fst`, `${process.env.LM_PATH}/${lgmodelId}`)
+                await fs.copyFile(`${this.graph}_main/words.txt`, `${process.env.LM_PATH}/${lgmodelId}`)
+                await fs.copyFile(`${this.graph}_main/phones/word_boundary.int`, `${process.env.LM_PATH}/${lgmodelId}`)
             } catch (err) {
                 debug(err)
                 throw 'Error while copying the new decoding graph'
@@ -464,7 +475,7 @@ class Kaldi {
                     cmd += `${id[idx]} ${this.graph}/${entity}/HCLG.fst `
                 })
                 const offset = list.indexOf(`#nonterm_bos`)
-                await sh(`make-grammar-fst --write-as-grammar=false --nonterm-phones-offset=${id[offset]} ${this.graph}/main/HCLG.fst ${cmd} ${this.graph}/HCLG.fst`)
+                await sh(`make-grammar-fst --write-as-grammar=false --nonterm-phones-offset=${id[offset]} ${this.graph}_main/HCLG.fst ${cmd} ${this.graph}/HCLG.fst`)
                 await fs.copyFile(`${this.graph}/HCLG.fst`, `${process.env.LM_PATH}/${lgmodelId}/HCLG.fst`)
                 await fs.copyFile(`${this.langpath}/words.txt`, `${process.env.LM_PATH}/${lgmodelId}/words.txt`)
             } catch (err) {

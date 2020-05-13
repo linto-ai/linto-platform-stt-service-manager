@@ -1,48 +1,59 @@
 FROM node:12
-
+LABEL maintainer="irebai@linagora.com"
 
 RUN apt-get update &&\
     apt-get install -y \
     python-dev \
     python-pip \
-    automake wget sox unzip swig build-essential libtool zlib1g-dev locales libatlas-base-dev &&\
+    automake wget sox unzip swig build-essential libtool zlib1g-dev locales libatlas-base-dev nano ca-certificates gfortran subversion &&\
     apt-get clean
 
 
-# Build kaldi
-## Download kaldi toolkit
-RUN cd /opt && git clone https://github.com/kaldi-asr/kaldi.git
+## Build kaldi
+RUN git clone --depth 1 https://github.com/kaldi-asr/kaldi.git /opt/kaldi && \
+    cd /opt/kaldi && \
+    cd /opt/kaldi/tools && \
+    ./extras/install_mkl.sh && \
+    make -j $(nproc) && \
+    cd /opt/kaldi/src && \
+    ./configure --shared && \
+    make depend -j $(nproc) && \
+    make -j $(nproc)
 
-## Install main libraries
-RUN cd /opt/kaldi/tools && \
-    extras/install_mkl.sh && \
-    make -j$(nproc)
-
-
-#Install NLP packages
+## Install NLP packages
 RUN cd /opt/kaldi/tools && \
     extras/install_phonetisaurus.sh && \
-    extras/install_irstlm.sh
-
-#Install auxiliary packages
-RUN pip install numpy
-RUN cd /opt/kaldi/tools && \
+    extras/install_irstlm.sh && \
+    pip install numpy && \
     pip install git+https://github.com/sequitur-g2p/sequitur-g2p && git clone https://github.com/sequitur-g2p/sequitur-g2p
 
-## Install main Kaldi functions
-RUN cd /opt/kaldi/src && \
-    sed -i -e ':a;N;$!ba;s:\\\n::g' Makefile && \
-    sed -i -e 's:^SUBDIRS = .*$:SUBDIRS = base matrix util tree gmm transform fstext hmm lm decoder lat cudamatrix bin lmbin fstbin:g' -e 's:^MEMTESTDIRS = .*$:MEMTESTDIRS = :g' Makefile && \
-    ./configure --shared && make depend -j2 && make -j2
-
-RUN /bin/bash -c "cd /opt/kaldi/src && /bin/rm */*{.a,.o}"
-
-
-## Install main npm modules
+## Install npm modules
 WORKDIR /usr/src/app
 COPY ./package.json ./
 RUN npm install
 
+## Clean kaldi installation (intel, openfst, src/*)
+RUN mkdir -p /opt/kaldi/src_/lib && \
+    mv /opt/kaldi/src/base/libkaldi-base.so \
+       /opt/kaldi/src/chain/libkaldi-chain.so \
+       /opt/kaldi/src/decoder/libkaldi-decoder.so \
+       /opt/kaldi/src/feat/libkaldi-feat.so \
+       /opt/kaldi/src/fstext/libkaldi-fstext.so \
+       /opt/kaldi/src/gmm/libkaldi-gmm.so \
+       /opt/kaldi/src/hmm/libkaldi-hmm.so \
+       /opt/kaldi/src/lat/libkaldi-lat.so \
+       /opt/kaldi/src/lm/libkaldi-lm.so \
+       /opt/kaldi/src/matrix/libkaldi-matrix.so \
+       /opt/kaldi/src/transform/libkaldi-transform.so \
+       /opt/kaldi/src/tree/libkaldi-tree.so \
+       /opt/kaldi/src/util/libkaldi-util.so \
+       /opt/kaldi/src_/lib && \
+    mv /opt/kaldi/src/lmbin /opt/kaldi/src/fstbin /opt/kaldi/src/bin /opt/kaldi/src_ && \
+    rm -rf /opt/kaldi/src && mv /opt/kaldi/src_ /opt/kaldi/src && \
+    cd /opt/kaldi/src && rm -f lmbin/*.cc lmbin/*.o lmbin/Makefile fstbin/*.cc fstbin/*.o fstbin/Makefile bin/*.cc bin/*.o bin/Makefile && \
+    cd /opt/intel/mkl/lib && rm -f intel64/*.a intel64_lin/*.a && \
+    cd /opt/kaldi/tools && mkdir openfsttmp && mv openfst-*/lib openfst-*/include openfst-*/bin openfsttmp && rm openfsttmp/lib/*.a openfsttmp/lib/*.la && \
+    rm -r openfst-*/* && mv openfsttmp/* openfst-*/ && rm -r openfsttmp
 
 ## Prepare work directories
 COPY ./components ./components
