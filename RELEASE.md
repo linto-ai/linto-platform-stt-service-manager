@@ -1,2 +1,2 @@
-# 1.1.1
-- Update Traefik component: add extras labels such as ssl and basicAuth
+# 1.1.2
+- Update Dockerfile and fix minor bugs
