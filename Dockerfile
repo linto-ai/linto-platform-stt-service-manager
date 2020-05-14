@@ -9,7 +9,7 @@ RUN apt-get update &&\
     apt-get clean
 
 
-## Build kaldi
+## Build kaldi and Clean installation (intel, openfst, src/*)
 RUN git clone --depth 1 https://github.com/kaldi-asr/kaldi.git /opt/kaldi && \
     cd /opt/kaldi && \
     cd /opt/kaldi/tools && \
@@ -18,22 +18,8 @@ RUN git clone --depth 1 https://github.com/kaldi-asr/kaldi.git /opt/kaldi && \
     cd /opt/kaldi/src && \
     ./configure --shared && \
     make depend -j $(nproc) && \
-    make -j $(nproc)
-
-## Install NLP packages
-RUN cd /opt/kaldi/tools && \
-    extras/install_phonetisaurus.sh && \
-    extras/install_irstlm.sh && \
-    pip install numpy && \
-    pip install git+https://github.com/sequitur-g2p/sequitur-g2p && git clone https://github.com/sequitur-g2p/sequitur-g2p
-
-## Install npm modules
-WORKDIR /usr/src/app
-COPY ./package.json ./
-RUN npm install
-
-## Clean kaldi installation (intel, openfst, src/*)
-RUN mkdir -p /opt/kaldi/src_/lib && \
+    make -j $(nproc) && \
+    mkdir -p /opt/kaldi/src_/lib && \
     mv /opt/kaldi/src/base/libkaldi-base.so \
        /opt/kaldi/src/chain/libkaldi-chain.so \
        /opt/kaldi/src/decoder/libkaldi-decoder.so \
@@ -54,6 +40,19 @@ RUN mkdir -p /opt/kaldi/src_/lib && \
     cd /opt/intel/mkl/lib && rm -f intel64/*.a intel64_lin/*.a && \
     cd /opt/kaldi/tools && mkdir openfsttmp && mv openfst-*/lib openfst-*/include openfst-*/bin openfsttmp && rm openfsttmp/lib/*.a openfsttmp/lib/*.la && \
     rm -r openfst-*/* && mv openfsttmp/* openfst-*/ && rm -r openfsttmp
+
+
+## Install NLP packages
+RUN cd /opt/kaldi/tools && \
+    extras/install_phonetisaurus.sh && \
+    extras/install_irstlm.sh && \
+    pip install numpy && \
+    pip install git+https://github.com/sequitur-g2p/sequitur-g2p && git clone https://github.com/sequitur-g2p/sequitur-g2p
+
+## Install npm modules
+WORKDIR /usr/src/app
+COPY ./package.json ./
+RUN npm install
 
 ## Prepare work directories
 COPY ./components ./components
