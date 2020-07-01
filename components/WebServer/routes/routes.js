@@ -2,7 +2,7 @@ const debug = require('debug')('app:webserver:routes')
 
 module.exports = webServer => {
     return {
-        '/': require(`./healthcheck`)(),
+        '/': require(`./healthcheck`)(webServer),
         '/service/:serviceId' : require('./serviceManager/service')(webServer),
         '/services' : require('./serviceManager/services')(webServer),
         '/acmodel/:modelId' : require('./modelManager/amodel')(webServer),
