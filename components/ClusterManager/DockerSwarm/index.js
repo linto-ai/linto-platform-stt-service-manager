@@ -15,7 +15,8 @@ class DockerSwarm {
                 "ContainerSpec": {
                     "Image": `${process.env.LINSTT_IMAGE}:${params.tag}`,
                     "Env": [
-                        `SERVICE_PORT=${process.env.LINSTT_PORT}`
+                        `SERVICE_PORT=${process.env.LINSTT_PORT}`,
+                        `SWAGGER_PATH=/opt/swagger.yml`
                     ],
                     "Mounts": [
                         {
@@ -28,6 +29,12 @@ class DockerSwarm {
                             "ReadOnly": true,
                             "Source": `${process.env.FILESYSTEM}/${process.env.AM_FOLDER_NAME}/${params.AModelId}`,
                             "Target": "/opt/models/AM",
+                            "Type": "bind"
+                        },
+                        {
+                            "ReadOnly": true,
+                            "Source": `${process.env.LINSTT_SWAGGER_PATH}`,
+                            "Target": "/opt/swagger.yml",
                             "Type": "bind"
                         }
                     ],
@@ -75,6 +82,16 @@ class DockerSwarm {
                     break
                 } else if (retries === 0) {
                     status = 0
+                    const serviceLog = await docker.getService(params.serviceId)
+                    var logOpts = {
+                        stdout: 1,
+                        stderr: 1,
+                        tail:100,
+                        follow:0
+                    };
+                    serviceLog.logs(logOpts, (logs, err)=>{
+                        console.log(err)
+                    })
                     break
                 }
             }
