@@ -43,9 +43,11 @@ class Nginx {
             }
 
             // Add location
+            const prefix= `/${process.env.LINTO_STACK_LINSTT_PREFIX}/${config.service}`
+
             if (this.conf.nginx.server.location === undefined) {
-                this.conf.nginx.server._add('location', `/stt-service/${config.service}/`);
-                this.conf.nginx.server.location._add('rewrite', `/stt-service/${config.service}/(.*) /$1 break`);
+                this.conf.nginx.server._add('location', `${prefix}/`);
+                this.conf.nginx.server.location._add('rewrite', `${prefix}/(.*) /$1 break`);
                 this.conf.nginx.server.location._add('client_max_body_size', `200M`);
                 this.conf.nginx.server.location._add('keepalive_timeout', `600s`);
                 this.conf.nginx.server.location._add('proxy_connect_timeout', `600s`);
@@ -54,9 +56,9 @@ class Nginx {
                 this.conf.nginx.server.location._add('send_timeout', `600s`);
                 this.conf.nginx.server.location._add('proxy_pass', `http://${config.service}`);
             } else {
-                this.conf.nginx.server._add('location', `/stt-service/${config.service}/`);
+                this.conf.nginx.server._add('location', `${prefix}/`);
                 idx = this.conf.nginx.server.location.length - 1
-                this.conf.nginx.server.location[idx]._add('rewrite', `/stt-service/${config.service}/(.*) /$1 break`);
+                this.conf.nginx.server.location[idx]._add('rewrite', `${prefix}/(.*) /$1 break`);
                 this.conf.nginx.server.location[idx]._add('client_max_body_size', `200M`);
                 this.conf.nginx.server.location[idx]._add('keepalive_timeout', `600s`);
                 this.conf.nginx.server.location[idx]._add('proxy_connect_timeout', `600s`);
