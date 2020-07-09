@@ -19,7 +19,7 @@ class DockerSwarm {
                     ],
                     "Mounts": [
                         {
-                            "ReadOnly": true,
+                            "ReadOnly": false,
                             "Source": `${process.env.FILESYSTEM}/${process.env.LM_FOLDER_NAME}/${params.LModelId}`,
                             "Target": "/opt/models/LM",
                             "Type": "bind"
