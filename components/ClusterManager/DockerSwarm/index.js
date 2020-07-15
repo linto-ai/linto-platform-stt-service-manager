@@ -15,11 +15,11 @@ class DockerSwarm {
                 "ContainerSpec": {
                     "Image": `${process.env.LINSTT_IMAGE}:${params.tag}`,
                     "Env": [
-                        `SERVICE_PORT=${process.env.LINSTT_PORT}`
+                        `SERVICE_PORT=${process.env.LINSTT_PORT}`,
                     ],
                     "Mounts": [
                         {
-                            "ReadOnly": true,
+                            "ReadOnly": false,
                             "Source": `${process.env.FILESYSTEM}/${process.env.LM_FOLDER_NAME}/${params.LModelId}`,
                             "Target": "/opt/models/LM",
                             "Type": "bind"
@@ -75,6 +75,16 @@ class DockerSwarm {
                     break
                 } else if (retries === 0) {
                     status = 0
+                    const serviceLog = await docker.getService(params.serviceId)
+                    var logOpts = {
+                        stdout: 1,
+                        stderr: 1,
+                        tail:100,
+                        follow:0
+                    };
+                    serviceLog.logs(logOpts, (logs, err)=>{
+                        console.log(err)
+                    })
                     break
                 }
             }

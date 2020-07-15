@@ -16,6 +16,8 @@ module.exports = function () {
                             if (check) {
                                 this.emit("serviceStarted", { service: service.serviceId, port: process.env.LINSTT_PORT, tag: service.tag })
                             }
+                        } else {
+                            this.emit("serviceStarted", { service: service.serviceId, port: process.env.LINSTT_PORT, tag: service.tag })
                         }
                     } else { //
                         const replicas = await this.cluster.serviceIsOn(service.serviceId)
