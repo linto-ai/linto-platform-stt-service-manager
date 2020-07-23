@@ -61,7 +61,7 @@ COPY ./models /usr/src/app/models
 COPY ./app.js ./config.js ./.defaultparam ./docker-healthcheck.js ./docker-entrypoint.sh ./wait-for-it.sh ./
 RUN mkdir /opt/model /opt/nginx && cp -r /opt/kaldi/egs/wsj/s5/utils ./components/LinSTT/Kaldi/scripts/
 
-
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/opt/kaldi/tools/openfst/lib
 ENV PATH /opt/kaldi/egs/wsj/s5/utils:/opt/kaldi/tools/openfst/bin:/opt/kaldi/src/fstbin:/opt/kaldi/src/lmbin:/opt/kaldi/src/bin:/opt/kaldi/tools/phonetisaurus-g2p/src/scripts:/opt/kaldi/tools/phonetisaurus-g2p:/opt/kaldi/tools/sequitur-g2p/g2p.py:/opt/kaldi/tools/irstlm/bin:$PATH
 
 EXPOSE 80
