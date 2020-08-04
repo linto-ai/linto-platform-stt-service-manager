@@ -62,7 +62,7 @@ definitions:
                   items:
                     type: string
 
-paramerters:
+parameters:
   service:
     serviceId-req:
       name: "serviceId"
@@ -254,7 +254,7 @@ paths:
       - "application/json"
       - "text/plain"
       parameters:
-      - $ref: '#/paramerters/service/serviceId-req'
+      - $ref: '#/parameters/service/serviceId-req'
       - name: "file"
         in: "formData"
         description: "Audio File (wav, mp3, aiff, flac, ogg)"
@@ -285,10 +285,10 @@ paths:
       produces:
       - "application/json"
       parameters: 
-      - $ref: '#/paramerters/service/serviceId-req'
-      - $ref: '#/paramerters/service/replicas-req'
-      - $ref: '#/paramerters/service/tag-req'
-      - $ref: '#/paramerters/service/LM-req'
+      - $ref: '#/parameters/service/serviceId-req'
+      - $ref: '#/parameters/service/replicas-req'
+      - $ref: '#/parameters/service/tag-req'
+      - $ref: '#/parameters/service/LM-req'
       responses:
         200:
           description: success
@@ -301,10 +301,10 @@ paths:
       produces:
       - "application/json"
       parameters: 
-      - $ref: '#/paramerters/service/serviceId-req'
-      - $ref: '#/paramerters/service/replicas'
-      - $ref: '#/paramerters/service/tag'
-      - $ref: '#/paramerters/service/LM'
+      - $ref: '#/parameters/service/serviceId-req'
+      - $ref: '#/parameters/service/replicas'
+      - $ref: '#/parameters/service/tag'
+      - $ref: '#/parameters/service/LM'
       responses:
         200:
           description: success
@@ -317,7 +317,7 @@ paths:
       produces:
       - "application/json"
       parameters: 
-      - $ref: '#/paramerters/service/serviceId-req'
+      - $ref: '#/parameters/service/serviceId-req'
       responses:
         200:
           description: success
@@ -330,7 +330,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-        - $ref: '#/paramerters/service/serviceId-req'
+        - $ref: '#/parameters/service/serviceId-req'
       responses:
         200:
           description: success
@@ -344,7 +344,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/service/serviceId-req'
+      - $ref: '#/parameters/service/serviceId-req'
       responses:
         200:
           description: success
@@ -358,7 +358,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/service/serviceId-req'
+      - $ref: '#/parameters/service/serviceId-req'
       responses:
         200:
           description: success
@@ -384,7 +384,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/service/serviceId-req'
+      - $ref: '#/parameters/service/serviceId-req'
       responses:
         200:
           description: success
@@ -398,7 +398,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/service/serviceId-req'
+      - $ref: '#/parameters/service/serviceId-req'
       responses:
         200:
           description: success
@@ -412,8 +412,8 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/service/serviceId-req'
-      - $ref: '#/paramerters/service/replicas-path-req'
+      - $ref: '#/parameters/service/serviceId-req'
+      - $ref: '#/parameters/service/replicas-path-req'
       responses:
         200:
           description: success
@@ -444,11 +444,11 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/file'
-      - $ref: '#/paramerters/model/link'
-      - $ref: '#/paramerters/model/lang-req'
-      - $ref: '#/paramerters/model/description'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/file'
+      - $ref: '#/parameters/model/link'
+      - $ref: '#/parameters/model/lang-req'
+      - $ref: '#/parameters/model/description'
       responses:
         200:
           description: success
@@ -463,7 +463,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
+      - $ref: '#/parameters/model/modelId-req'
       responses:
         200:
           description: success
@@ -478,7 +478,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
+      - $ref: '#/parameters/model/modelId-req'
       responses:
         200:
           description: success
@@ -519,13 +519,13 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/file'
-      - $ref: '#/paramerters/model/link'
-      - $ref: '#/paramerters/model/lmodel'
-      - $ref: '#/paramerters/model/lang'
-      - $ref: '#/paramerters/model/amodel'
-      - $ref: '#/paramerters/model/type'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/file'
+      - $ref: '#/parameters/model/link'
+      - $ref: '#/parameters/model/lmodel'
+      - $ref: '#/parameters/model/lang'
+      - $ref: '#/parameters/model/amodel'
+      - $ref: '#/parameters/model/type'
       responses:
         200:
           description: success
@@ -540,7 +540,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
+      - $ref: '#/parameters/model/modelId-req'
       responses:
         200:
           description: success
@@ -555,7 +555,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
+      - $ref: '#/parameters/model/modelId-req'
       responses:
         200:
           description: success
@@ -578,7 +578,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
+      - $ref: '#/parameters/model/modelId-req'
       responses:
         200:
           description: success
@@ -608,8 +608,8 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelID-req'
-      - $ref: '#/paramerters/model/data'
+      - $ref: '#/parameters/model/modelID-req'
+      - $ref: '#/parameters/model/data'
       responses:
         200:
           description: success
@@ -627,9 +627,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/entity-req'
-      - $ref: '#/paramerters/model/file-txt-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/entity-req'
+      - $ref: '#/parameters/model/file-txt-req'
       responses:
         200:
           description: success
@@ -644,9 +644,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/entity-req'
-      - $ref: '#/paramerters/model/file-txt-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/entity-req'
+      - $ref: '#/parameters/model/file-txt-req'
       responses:
         200:
           description: success
@@ -661,9 +661,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/entity-req'
-      - $ref: '#/paramerters/model/file-txt-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/entity-req'
+      - $ref: '#/parameters/model/file-txt-req'
       responses:
         200:
           description: success
@@ -678,8 +678,8 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/entity-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/entity-req'
       responses:
         200:
           description: success
@@ -692,8 +692,8 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/entity-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/entity-req'
       responses:
         200:
           description: success
@@ -707,7 +707,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
+      - $ref: '#/parameters/model/modelId-req'
       responses:
         200:
           description: success
@@ -722,9 +722,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelID-req'
-      - $ref: '#/paramerters/model/entity-req'
-      - $ref: '#/paramerters/model/entity-data-req'
+      - $ref: '#/parameters/model/modelID-req'
+      - $ref: '#/parameters/model/entity-req'
+      - $ref: '#/parameters/model/entity-data-req'
       responses:
         200:
           description: success
@@ -739,9 +739,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelID-req'
-      - $ref: '#/paramerters/model/entity-req'
-      - $ref: '#/paramerters/model/entity-data-req'
+      - $ref: '#/parameters/model/modelID-req'
+      - $ref: '#/parameters/model/entity-req'
+      - $ref: '#/parameters/model/entity-data-req'
       responses:
         200:
           description: success
@@ -756,9 +756,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelID-req'
-      - $ref: '#/paramerters/model/entity-req'
-      - $ref: '#/paramerters/model/entity-data-req'
+      - $ref: '#/parameters/model/modelID-req'
+      - $ref: '#/parameters/model/entity-req'
+      - $ref: '#/parameters/model/entity-data-req'
       responses:
         200:
           description: success
@@ -777,9 +777,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/intent-req'
-      - $ref: '#/paramerters/model/file-txt-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/intent-req'
+      - $ref: '#/parameters/model/file-txt-req'
       responses:
         200:
           description: success
@@ -794,9 +794,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/intent-req'
-      - $ref: '#/paramerters/model/file-txt-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/intent-req'
+      - $ref: '#/parameters/model/file-txt-req'
       responses:
         200:
           description: success
@@ -811,9 +811,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/intent-req'
-      - $ref: '#/paramerters/model/file-txt-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/intent-req'
+      - $ref: '#/parameters/model/file-txt-req'
       responses:
         200:
           description: success
@@ -828,8 +828,8 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/intent-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/intent-req'
       responses:
         200:
           description: success
@@ -842,8 +842,8 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
-      - $ref: '#/paramerters/model/intent-req'
+      - $ref: '#/parameters/model/modelId-req'
+      - $ref: '#/parameters/model/intent-req'
       responses:
         200:
           description: success
@@ -857,7 +857,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelId-req'
+      - $ref: '#/parameters/model/modelId-req'
       responses:
         200:
           description: success
@@ -872,9 +872,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelID-req'
-      - $ref: '#/paramerters/model/intent-req'
-      - $ref: '#/paramerters/model/intent-data-req'
+      - $ref: '#/parameters/model/modelID-req'
+      - $ref: '#/parameters/model/intent-req'
+      - $ref: '#/parameters/model/intent-data-req'
       responses:
         200:
           description: success
@@ -889,9 +889,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelID-req'
-      - $ref: '#/paramerters/model/intent-req'
-      - $ref: '#/paramerters/model/intent-data-req'
+      - $ref: '#/parameters/model/modelID-req'
+      - $ref: '#/parameters/model/intent-req'
+      - $ref: '#/parameters/model/intent-data-req'
       responses:
         200:
           description: success
@@ -906,9 +906,9 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - $ref: '#/paramerters/model/modelID-req'
-      - $ref: '#/paramerters/model/intent-req'
-      - $ref: '#/paramerters/model/intent-data-req'
+      - $ref: '#/parameters/model/modelID-req'
+      - $ref: '#/parameters/model/intent-req'
+      - $ref: '#/parameters/model/intent-data-req'
       responses:
         200:
           description: success
