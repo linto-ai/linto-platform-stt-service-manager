@@ -14,7 +14,7 @@ services:
       - ./config/swagger.yml:/opt/swagger.yml
     ports:
       - target: 80
-        published: 80
+        published: 8000
     deploy:
       mode: replicated
       replicas: 1
