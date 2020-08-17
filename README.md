@@ -13,7 +13,7 @@ With our proposed stack [linto-platform-stack](https://github.com/linto-ai/linto
 # Develop
 
 ## Prerequisites
-To lauch the application, you'll have to launch associated services :
+To use the STT-manager service, you'll have to make sure that dependent services are installed and launched:
 
 - mongodb: `docker pull mongo`
 - nginx: `docker pull nginx`
