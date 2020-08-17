@@ -1,3 +1,6 @@
+# 1.1.4
+- Fix minor bugs and update the environment variables for better usability
+
 # 1.1.3
 - Update Swagger file and nginx Component scripts to the latest version of LinSTT
 
