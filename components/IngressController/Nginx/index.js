@@ -43,7 +43,7 @@ class Nginx {
             }
 
             // Add location
-            const prefix= `/${process.env.LINTO_STACK_LINSTT_PREFIX}/${config.service}`
+            const prefix= `/${process.env.LINSTT_PREFIX}/${config.service}`
 
             if (this.conf.nginx.server.location === undefined) {
                 this.conf.nginx.server._add('location', `${prefix}/`);

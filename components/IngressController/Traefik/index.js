@@ -14,7 +14,7 @@ class Traefik {
                 newSpec.version = spec.Version.Index
 
                 //Service Prefix
-                const prefix= `/${process.env.LINTO_STACK_LINSTT_PREFIX}/${serviceId}`
+                const prefix= `/${process.env.LINSTT_PREFIX}/${serviceId}`
 
                 //services & routers
                 const enableLable = `traefik.enable`
