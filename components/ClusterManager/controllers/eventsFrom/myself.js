@@ -12,7 +12,8 @@ module.exports = function () {
                         if (replicas !== service.replicas) {
                             await this.cluster.stopService(service.serviceId).catch(err => {})
                             await this.cluster.startService(service)
-                            const check = await this.cluster.checkServiceOn(service)
+                            //const check = await this.cluster.checkServiceOn(service)
+                            const check = true
                             if (check) {
                                 this.emit("serviceStarted", { service: service.serviceId, port: process.env.LINSTT_PORT, tag: service.tag })
                             }

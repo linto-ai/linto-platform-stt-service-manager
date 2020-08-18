@@ -20,7 +20,8 @@ module.exports = function () {
 
 
             await this.cluster.startService(service)
-            const check = await this.cluster.checkServiceOn(service)
+            //const check = await this.cluster.checkServiceOn(service)
+            const check = true
             if (check) {
                 this.emit("serviceStarted", { service: serviceId, port: process.env.LINSTT_PORT, tag: service.tag })
                 await this.db.service.updateService(serviceId, { isOn: 1 })
@@ -46,7 +47,7 @@ module.exports = function () {
             if (service === -1) throw `Service '${serviceId}' does not exist`
             if (!service.isOn) throw `Service '${serviceId}' is not running`
             await this.cluster.stopService(serviceId)
-            await this.cluster.checkServiceOff(serviceId)
+            //await this.cluster.checkServiceOff(serviceId)
             await this.db.service.updateService(serviceId, { isOn: 0 })
             this.emit("serviceStopped", serviceId)
             return cb({ bool: true, msg: `Service '${serviceId}' is successfully stopped` })
@@ -67,7 +68,7 @@ module.exports = function () {
             if (!service) throw `Service '${payload.serviceId}' does not exist`
             if (payload.replicas < 1) throw 'The scale must be greater or equal to 1'
             await this.cluster.scaleService(payload)
-            await this.cluster.checkServiceOn(payload)
+            //await this.cluster.checkServiceOn(payload)
             await this.db.service.updateService(payload.serviceId, { replicas: payload.replicas })
             this.emit("serviceScaled")
             return cb({ bool: true, msg: `Service '${payload.serviceId}' is successfully scaled` })
