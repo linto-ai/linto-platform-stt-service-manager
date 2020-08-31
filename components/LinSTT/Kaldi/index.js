@@ -47,8 +47,6 @@ class Kaldi {
     constructor() {
         this.lang = process.env.LANGUAGE.split(',')
         this.lang = this.lang.map(s => s.trim())
-        this.graphError = false
-        this.graphMsg = ""
     }
 
     async getAMParams(acmodelId) {
@@ -237,6 +235,8 @@ class Kaldi {
         const dictgenpath = `${params.lmGenPath}/dict`
         this.lexicongenfile = `${params.lmGenPath}/dict/lexicon.txt`
         this.oovFile = `${lexiconpath}/oov`
+        this.graphError = false
+        this.graphMsg = ""
         /** ****************** */
 
         let exist = await fs.stat(this.tmplmpath).then(async () => { return true }).catch(async () => { return false })
@@ -414,6 +414,7 @@ class Kaldi {
                     this.graphError = true
                     this.graphMsg = 'Error during entities HCLG graph generation'
                     debug(`Error during entities HCLG graph generation: ${this.graph}/${entity}`)
+                    debug(err)
                 }
             }).catch(err => {
                 this.graphError = true
@@ -442,7 +443,6 @@ class Kaldi {
                 }
             })
             await sleep(time * 1000)
-
             if (this.graphError)
                 throw this.graphMsg
         }
@@ -454,9 +454,8 @@ class Kaldi {
     async generate_final_HCLG(lgmodelId) {
         if (this.listentities.length == 0) {
             try {
-                await fs.copyFile(`${this.graph}_main/HCLG.fst`, `${process.env.LM_PATH}/${lgmodelId}`)
-                await fs.copyFile(`${this.graph}_main/words.txt`, `${process.env.LM_PATH}/${lgmodelId}`)
-                await fs.copyFile(`${this.graph}_main/phones/word_boundary.int`, `${process.env.LM_PATH}/${lgmodelId}`)
+                await fs.copyFile(`${this.graph}_main/HCLG.fst`, `${process.env.LM_PATH}/${lgmodelId}/HCLG.fst`)
+                await fs.copyFile(`${this.graph}_main/words.txt`, `${process.env.LM_PATH}/${lgmodelId}/words.txt`)
             } catch (err) {
                 debug(err)
                 throw 'Error while copying the new decoding graph'
