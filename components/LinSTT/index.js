@@ -130,6 +130,7 @@ class LinSTT extends Component {
             data.oov = this.stt.oov
             data.updateStatus = `Language model is successfully generated`
             await db.updateModel(res.modelId, data)
+            this.emit('serviceReload',res.modelId)
         } catch (err) {
             this.stt.removeTmpFolder()
             await db.generationState(res.modelId, -1, `ERROR: Not generated. ${err}`)

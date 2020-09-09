@@ -67,23 +67,11 @@ module.exports = function () {
             const service = await this.db.service.findService(payload.serviceId)
             if (!service) throw `Service '${payload.serviceId}' does not exist`
             if (payload.replicas < 1) throw 'The scale must be greater or equal to 1'
-            await this.cluster.scaleService(payload)
+            await this.cluster.updateService(payload.serviceId, payload.replicas)
             //await this.cluster.checkServiceOn(payload)
             await this.db.service.updateService(payload.serviceId, { replicas: payload.replicas })
             this.emit("serviceScaled")
             return cb({ bool: true, msg: `Service '${payload.serviceId}' is successfully scaled` })
-        } catch (err) {
-            return cb({ bool: false, msg: err })
-        }
-    })
-
-    this.app.components['WebServer'].on('reloadService', async (cb, serviceId) => {
-        try {
-            const service = await this.db.service.findService(serviceId)
-            if (!service) throw `Service '${serviceId}' does not exist`
-            return cb({ bool: true, msg: `It has not been developped yet` })
-            this.emit("serviceReloaded")
-            return cb({ bool: true, msg: `Service '${serviceId}' is successfully reloaded` })
         } catch (err) {
             return cb({ bool: false, msg: err })
         }

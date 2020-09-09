@@ -140,14 +140,16 @@ class DockerSwarm {
         })
     }
 
-    async scaleService(params) {
+    async updateService(serviceId,replicas=null) {
         return new Promise(async (resolve, reject) => {
             try {
-                const service = await docker.getService(params.serviceId)
+                const service = await docker.getService(serviceId)
                 const spec = await service.inspect()
                 const newSpec = spec.Spec
-                newSpec.version = spec.Version.Index
-                newSpec.Mode.Replicated.Replicas = params.replicas
+                newSpec.version = parseInt(spec.Version.Index) // version number of the service object being updated. This is required to avoid conflicting writes
+                newSpec.TaskTemplate.ForceUpdate = parseInt(spec.Spec.TaskTemplate.ForceUpdate) + 1 // counter that forces an update even if no relevant parameters have been changed
+                if (replicas != null)
+                    newSpec.Mode.Replicated.Replicas = replicas
                 await service.update(newSpec)
                 resolve()
             } catch (err) {
@@ -155,10 +157,6 @@ class DockerSwarm {
                 reject(err)
             }
         })
-    }
-
-
-    reloadService() {
     }
 
     async stopService(serviceId) {
