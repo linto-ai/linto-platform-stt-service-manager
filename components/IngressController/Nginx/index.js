@@ -105,6 +105,23 @@ class Nginx {
     async reloadNginx() {
         return new Promise(async (resolve, reject) => {
             try {
+                const service = await docker.getService(process.env.NGINX_SERVICE_ID)
+                const spec = await service.inspect()
+                const newSpec = spec.Spec
+                newSpec.version = parseInt(spec.Version.Index) // version number of the service object being updated. This is required to avoid conflicting writes
+                newSpec.TaskTemplate.ForceUpdate = parseInt(spec.Spec.TaskTemplate.ForceUpdate) + 1 // counter that forces an update even if no relevant parameters have been changed
+                await service.update(newSpec)
+                resolve()
+            } catch (err) {
+                debug(err)
+                reject(err)
+            }
+        })
+    }
+
+    async reloadNginx_deprecated() {
+        return new Promise(async (resolve, reject) => {
+            try {
                 const nginx = await docker.listContainers({
                     "filters": {
                         "name": [`/*${process.env.NGINX_SERVICE_ID}*`]

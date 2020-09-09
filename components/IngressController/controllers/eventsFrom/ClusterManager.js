@@ -8,6 +8,7 @@ module.exports = function () {
         this.app.components['ClusterManager'].on('serviceStarted', async (info) => {
             try {
                 this.ingress.addUpStream(info)
+                debug(`Reload running service ${process.env.NGINX_SERVICE_ID}`)
                 await this.ingress.reloadNginx()
             } catch (err) {
                 console.error(err)
@@ -16,6 +17,7 @@ module.exports = function () {
         this.app.components['ClusterManager'].on('serviceStopped', async (serviceId) => {
             try {
                 this.ingress.removeUpStream(serviceId)
+                debug(`Reload running service ${process.env.NGINX_SERVICE_ID}`)
                 await this.ingress.reloadNginx()
             } catch (err) {
                 console.error(err)
@@ -23,12 +25,11 @@ module.exports = function () {
         })
         this.app.components['ClusterManager'].on('serviceScaled', async () => {
             try {
+                debug(`Reload running service ${process.env.NGINX_SERVICE_ID}`)
                 await this.ingress.reloadNginx()
             } catch (err) {
                 console.error(err)
             }
-        })
-        this.app.components['ClusterManager'].on('serviceReloaded', async () => {
         })
     }
 
@@ -43,8 +44,6 @@ module.exports = function () {
         this.app.components['ClusterManager'].on('serviceStopped', async (serviceId) => {
         })
         this.app.components['ClusterManager'].on('serviceScaled', async () => {
-        })
-        this.app.components['ClusterManager'].on('serviceReloaded', async () => {
         })
     }
 }
