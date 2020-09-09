@@ -1,3 +1,6 @@
+# 1.1.5
+- Change LinSTT service reload and Traefik Label parameters
+
 # 1.1.4
 - Fix minor bugs and update the environment variables for better usability
 
