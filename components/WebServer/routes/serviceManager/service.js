@@ -71,15 +71,6 @@ module.exports = (webserver) => {
             }
     },
     {
-        path: '/reload',
-        method: 'post',
-        requireAuth: false,
-        controller:
-            (req, res, next) => {
-                webserver.emit("reloadService", (ans) => { answer(ans, res) }, req.params.serviceId)
-            }
-    },
-    {
         path: '/',
         method: 'put',
         requireAuth: false,
