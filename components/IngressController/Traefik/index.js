@@ -31,10 +31,10 @@ class Traefik {
                 newSpec.Labels["com.docker.stack.namespace"] = process.env.LINTO_STACK_NAME
 
                 //middlewares
-                const prefixLabel = `traefik.http.middlewares.stt-prefix.stripprefix.prefixes`
-                const middlawreLabel = `traefik.http.routers.${serviceId}.middlewares`
+                const prefixLabel = `traefik.http.middlewares.${serviceId}-prefix.stripprefix.prefixes`
+                const middlewareLabel = `traefik.http.routers.${serviceId}.middlewares`
                 newSpec.Labels[prefixLabel] = prefix
-                newSpec.Labels[middlawreLabel] = 'stt-prefix@docker'
+                newSpec.Labels[middlewareLabel] = `${serviceId}-prefix@docker`
 
                 //ssl
                 const secureentrypoints = `traefik.http.routers.${serviceId}-secure.entrypoints`
@@ -45,17 +45,17 @@ class Traefik {
                 if (process.env.LINTO_STACK_USE_SSL != undefined && process.env.LINTO_STACK_USE_SSL == 'true') {
                     newSpec.Labels[secureentrypoints] = "https"
                     newSpec.Labels[securetls] = "true"
-                    newSpec.Labels[securemiddleware] = "stt-prefix@docker"
+                    newSpec.Labels[securemiddleware] = `${serviceId}-prefix@docker`
                     newSpec.Labels[securerule] = `Host(\`${process.env.LINTO_STACK_DOMAIN}\`) && PathPrefix(\`${prefix}\`)`
-                    newSpec.Labels[middlawreLabel] = "ssl-redirect@file, stt-prefix@docker"
+                    newSpec.Labels[middlewareLabel] = `ssl-redirect@file, ${serviceId}-prefix@docker`
                 }
 
                 //basicAuth
                 if (process.env.LINTO_STACK_HTTP_USE_AUTH != undefined && process.env.LINTO_STACK_HTTP_USE_AUTH == 'true') {
                     if (process.env.LINTO_STACK_USE_SSL != undefined && process.env.LINTO_STACK_USE_SSL == 'true')
-                        newSpec.Labels[securemiddleware] = 'basic-auth@file, stt-prefix@docker'
+                        newSpec.Labels[securemiddleware] = `basic-auth@file, ${serviceId}-prefix@docker`
                     else
-                        newSpec.Labels[middlawreLabel] = "basic-auth@file, stt-prefix@docker"
+                        newSpec.Labels[middlewareLabel] = `basic-auth@file, ${serviceId}-prefix@docker`
                 }
 
                 await service.update(newSpec)
