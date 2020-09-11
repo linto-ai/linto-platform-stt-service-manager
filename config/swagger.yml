@@ -243,40 +243,6 @@ parameters:
         $ref: '#/definitions/Intent'    
 
 paths:
-  stt/{serviceId}/transcribe:
-    post:
-      tags:
-        - "Speech-To-Text API"
-      summary: Perform Speech-to-Text
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      - "text/plain"
-      parameters:
-      - $ref: '#/parameters/service/serviceId-req'
-      - name: "file"
-        in: "formData"
-        description: "Audio File (wav, mp3, aiff, flac, ogg)"
-        required: true
-        type: "file"
-      - name: "nbrSpeaker"
-        in: "formData"
-        description: "Number of speakers in the audio"
-        required: false
-        type: "number"
-        default: 1
-      - name: "speaker"
-        in: "formData"
-        description: "Do speaker diarization"
-        required: false
-        type: "string"
-        enum: [ "Yes", "No" ]
-        default: "No"
-      responses:
-        200:
-          description: Successfully transcribe the audio
-
   /service/{serviceId}:
     post:
       tags:
