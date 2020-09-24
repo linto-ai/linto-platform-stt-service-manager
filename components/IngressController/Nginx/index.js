@@ -3,6 +3,7 @@ const fs = require('fs')
 const NginxConfFile = require('nginx-conf').NginxConfFile;
 const Docker = require('dockerode');
 const docker = new Docker({ socketPath: process.env.DOCKER_SOCKET_PATH });
+const sleep = require('util').promisify(setTimeout)
 
 class Nginx {
     constructor() {
@@ -33,12 +34,12 @@ class Nginx {
         try {
             if (this.conf.nginx.upstream === undefined) {
                 this.conf.nginx._add('upstream', config.service);
-                this.conf.nginx.upstream._add('server', `${config.service}`);
+                this.conf.nginx.upstream._add('server', `${config.service}:80`);
                 this.conf.nginx.upstream._add('least_conn', '');
             } else {
                 this.conf.nginx._add('upstream', config.service);
                 idx = this.conf.nginx.upstream.length - 1
-                this.conf.nginx.upstream[idx]._add('server', `${config.service}`);
+                this.conf.nginx.upstream[idx]._add('server', `${config.service}:80`);
                 this.conf.nginx.upstream[idx]._add('least_conn', '');
             }
 
@@ -106,11 +107,21 @@ class Nginx {
         return new Promise(async (resolve, reject) => {
             try {
                 const service = await docker.getService(process.env.NGINX_SERVICE_ID)
-                const spec = await service.inspect()
-                const newSpec = spec.Spec
-                newSpec.version = parseInt(spec.Version.Index) // version number of the service object being updated. This is required to avoid conflicting writes
-                newSpec.TaskTemplate.ForceUpdate = parseInt(spec.Spec.TaskTemplate.ForceUpdate) + 1 // counter that forces an update even if no relevant parameters have been changed
-                await service.update(newSpec)
+                while (true) {
+                    try {
+                        const spec = await service.inspect()
+                        const newSpec = spec.Spec
+                        newSpec.version = parseInt(spec.Version.Index) // version number of the service object being updated. This is required to avoid conflicting writes
+                        newSpec.TaskTemplate.ForceUpdate = parseInt(spec.Spec.TaskTemplate.ForceUpdate) + 1 // counter that forces an update even if no relevant parameters have been changed
+                        const time = 0.5
+                        await sleep(time * 1000)
+                        await service.update(newSpec)
+                        break
+                    } catch(err){
+                        debug("Service nginx update stopped due to another update process! Retry...")
+                    }
+                }
+                debug("Reload done")
                 resolve()
             } catch (err) {
                 debug(err)
