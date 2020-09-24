@@ -15,10 +15,10 @@ module.exports = function () {
                             //const check = await this.cluster.checkServiceOn(service)
                             const check = true
                             if (check) {
-                                this.emit("serviceStarted", { service: service.serviceId, port: process.env.LINSTT_PORT, tag: service.tag })
+                                this.emit("serviceStarted", { service: service.serviceId, tag: service.tag })
                             }
                         } else {
-                            this.emit("serviceStarted", { service: service.serviceId, port: process.env.LINSTT_PORT, tag: service.tag })
+                            this.emit("serviceStarted", { service: service.serviceId, tag: service.tag })
                         }
                     } else { //
                         const replicas = await this.cluster.serviceIsOn(service.serviceId)

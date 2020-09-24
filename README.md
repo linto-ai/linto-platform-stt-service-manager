@@ -71,7 +71,6 @@ nano .env
 |LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_USER|MongoDb service username|root|
 |LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PSWD|MongoDb service password user|root|
 |LINTO_STACK_LINSTT_IMAGE|LinSTT docker image to use|lintoai/linto-platform-stt-standalone-worker|
-|LINTO_STACK_LINSTT_PORT|LinSTT service port|2000|
 |LINTO_STACK_LINSTT_NETWORK|LinSTT docker network to connect|linto-net|
 |LINTO_STACK_LINSTT_PREFIX|LinSTT service prefix to use with controller ingress|stt|
 

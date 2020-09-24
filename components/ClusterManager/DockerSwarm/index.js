@@ -14,9 +14,6 @@ class DockerSwarm {
             "TaskTemplate": {
                 "ContainerSpec": {
                     "Image": `${process.env.LINSTT_IMAGE}:${params.tag}`,
-                    "Env": [
-                        `SERVICE_PORT=${process.env.LINSTT_PORT}`,
-                    ],
                     "Mounts": [
                         {
                             "ReadOnly": false,

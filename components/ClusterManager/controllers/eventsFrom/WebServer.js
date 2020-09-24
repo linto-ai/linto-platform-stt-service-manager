@@ -23,7 +23,7 @@ module.exports = function () {
             //const check = await this.cluster.checkServiceOn(service)
             const check = true
             if (check) {
-                this.emit("serviceStarted", { service: serviceId, port: process.env.LINSTT_PORT, tag: service.tag })
+                this.emit("serviceStarted", { service: serviceId, tag: service.tag })
                 await this.db.service.updateService(serviceId, { isOn: 1 })
             }
             else {

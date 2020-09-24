@@ -58,7 +58,6 @@ function configureDefaults() {
 
         //LINSTT
         process.env.LINSTT_IMAGE = ifHas(process.env.LINTO_STACK_LINSTT_IMAGE, envdefault.LINTO_STACK_LINSTT_IMAGE)
-        process.env.LINSTT_PORT = ifHas(process.env.LINTO_STACK_LINSTT_PORT, envdefault.LINTO_STACK_LINSTT_PORT)
         process.env.LINSTT_NETWORK = ifHas(process.env.LINTO_STACK_LINSTT_NETWORK, envdefault.LINTO_STACK_LINSTT_NETWORK)
         process.env.LINSTT_PREFIX = ifHas(process.env.LINTO_STACK_LINSTT_PREFIX, envdefault.LINTO_STACK_LINSTT_PREFIX)
         process.env.LINSTT_PREFIX = process.env.LINSTT_PREFIX.replace(/\//g,"")

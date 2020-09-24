@@ -22,7 +22,7 @@ class Traefik {
                 const entrypointLable = `traefik.http.routers.${serviceId}.entrypoints`
                 const ruleLable = `traefik.http.routers.${serviceId}.rule`
                 newSpec.Labels[enableLable] = 'true'
-                newSpec.Labels[portLable] = process.env.LINSTT_PORT
+                newSpec.Labels[portLable] = '80'
                 newSpec.Labels[entrypointLable] = 'http'
                 newSpec.Labels[ruleLable] = `Host(\`${process.env.LINTO_STACK_DOMAIN}\`) && PathPrefix(\`${prefix}\`)`
 

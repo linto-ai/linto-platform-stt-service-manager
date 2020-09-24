@@ -33,12 +33,12 @@ class Nginx {
         try {
             if (this.conf.nginx.upstream === undefined) {
                 this.conf.nginx._add('upstream', config.service);
-                this.conf.nginx.upstream._add('server', `${config.service}:${config.port}`);
+                this.conf.nginx.upstream._add('server', `${config.service}`);
                 this.conf.nginx.upstream._add('least_conn', '');
             } else {
                 this.conf.nginx._add('upstream', config.service);
                 idx = this.conf.nginx.upstream.length - 1
-                this.conf.nginx.upstream[idx]._add('server', `${config.service}:${config.port}`);
+                this.conf.nginx.upstream[idx]._add('server', `${config.service}`);
                 this.conf.nginx.upstream[idx]._add('least_conn', '');
             }
 
