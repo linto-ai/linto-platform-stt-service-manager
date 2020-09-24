@@ -38,6 +38,7 @@ LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_USER=root
 LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PSWD=root
 
 # LinSTT settings
-LINTO_STACK_LINSTT_IMAGE=lintoai/linto-platform-stt-standalone-worker
+LINTO_STACK_LINSTT_OFFLINE_IMAGE=lintoai/linto-platform-stt-standalone-worker
+LINTO_STACK_LINSTT_STREAMING_IMAGE=lintoai/linto-platform-stt-standalone-worker-streaming
 LINTO_STACK_LINSTT_NETWORK=linto-net
 LINTO_STACK_LINSTT_PREFIX=stt
