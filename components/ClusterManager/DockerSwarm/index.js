@@ -13,10 +13,7 @@ class DockerSwarm {
             "Name": params.serviceId,
             "TaskTemplate": {
                 "ContainerSpec": {
-                    "Image": `${process.env.LINSTT_IMAGE}:${params.tag}`,
-                    "Env": [
-                        `SERVICE_PORT=${process.env.LINSTT_PORT}`,
-                    ],
+                    "Image": params.image,
                     "Mounts": [
                         {
                             "ReadOnly": false,
@@ -129,6 +126,11 @@ class DockerSwarm {
     startService(params) {
         return new Promise((resolve, reject) => {
             try {
+                switch (params.tag) {
+                    case 'offline': params["image"] = process.env.LINSTT_OFFLINE_IMAGE; break
+                    case 'online': params["image"] = process.env.LINSTT_STREAMING_IMAGE; break
+                    default: throw 'Undefined service tag'
+                }
                 const options = this.serviceOption(params)
                 docker.createService(options, function (err) {
                     if (err) reject(err)

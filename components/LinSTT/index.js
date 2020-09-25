@@ -1,7 +1,9 @@
 const Component = require(`../component.js`)
 const debug = require('debug')(`app:linstt`)
 const compressing = require('compressing');
-
+const fetch = require('node-fetch');
+const mime = require('mime-types')
+const fs = require('fs')
 const am = require(`${process.cwd()}/models/models/AMUpdates`)
 const lm = require(`${process.cwd()}/models/models/LMUpdates`)
 const service = require(`${process.cwd()}/models/models/ServiceUpdates`)
@@ -31,6 +33,30 @@ class LinSTT extends Component {
         else return 0
     }
 
+    async downloadLink(link) {
+        return new Promise(async (resolve, rejection) => {
+            try {
+                const filename = link.split('/').pop()
+                const filepath = `${process.env.TEMP_FILE_PATH}/${filename}`
+                const res = await fetch(link, {method:"GET"})
+                if(res.status != 200){
+                    if (res.statusText == "Not Found")
+                        throw `${link} ${res.statusText}`
+                    else throw res.statusText
+                }
+                const file=fs.createWriteStream(filepath,{'emitClose':true})
+                res.body.pipe(file)
+                res.body.on('end',() => {
+                    const filetype = mime.lookup(filepath)
+                    resolve({ 'path': filepath, 'type': filetype })
+                })
+                res.body.on('error',(err) => {throw err})
+            } catch (err) {
+                console.error("ERROR: " + err)
+                rejection(err)
+            }
+        })
+    }
 
     async uncompressFile(type, src, dest) {
         return new Promise(async (resolve, rejection) => {
@@ -130,7 +156,7 @@ class LinSTT extends Component {
             data.oov = this.stt.oov
             data.updateStatus = `Language model is successfully generated`
             await db.updateModel(res.modelId, data)
-            this.emit('serviceReload',res.modelId)
+            this.emit('serviceReload', res.modelId)
         } catch (err) {
             this.stt.removeTmpFolder()
             await db.generationState(res.modelId, -1, `ERROR: Not generated. ${err}`)

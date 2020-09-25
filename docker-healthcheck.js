@@ -1,7 +1,5 @@
-const request = require('request')
+const fetch = require('node-fetch')
 
-request(`http://localhost:${process.env.LINTO_STACK_STT_SERVICE_MANAGER_HTTP_PORT}`, error => {
-  if (error) {
-    throw error
-  }
+fetch(`http://localhost:${process.env.LINTO_STACK_STT_SERVICE_MANAGER_HTTP_PORT}`).catch(err => {
+  throw err.message
 })

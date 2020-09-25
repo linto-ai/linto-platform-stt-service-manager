@@ -1,7 +1,6 @@
 const debug = require('debug')(`app:linstt:eventsFrom:WebServer`)
 const fs = require('fs').promises
 const rimraf = require("rimraf");
-const download = require('download');
 const ncp = require('ncp').ncp;
 const ncpPromise = require('util').promisify(ncp)
 const datetime = require('node-datetime')
@@ -93,11 +92,9 @@ module.exports = function () {
                     await this.uncompressFile(payload.file.mimetype, payload.file.path, destPath)
                     await fs.unlink(payload.file.path)
                 } else {
-                    const response = await download(payload.link, destPath, { extract: true })
-                    if (!Array.isArray(response)) {
-                        rimraf(destPath, async (err) => { if (err) throw err; }) //remove folder
-                        return cb({ bool: false, msg: 'Invalid file type or format. zip and tar.gz are accepted' })
-                    }
+                    const fileparams = await this.downloadLink(payload.link)
+                    await this.uncompressFile(fileparams["type"], fileparams["path"], destPath)
+                    await fs.unlink(fileparams["path"])
                 }
                 const check = await this.stt.checkModel(payload.modelId, 'lm')
                 if (check) {
@@ -231,11 +228,9 @@ module.exports = function () {
                 await this.uncompressFile(payload.file.mimetype, payload.file.path, destPath)
                 await fs.unlink(payload.file.path)
             } else if (payload.link != undefined) {
-                const response = await download(payload.link, destPath, { extract: true })
-                if (!Array.isArray(response)) {
-                    rimraf(destPath, async (err) => { if (err) throw err; }) //remove folder
-                    throw 'Invalid file type or format. zip and tar.gz are accepted'
-                }
+                const fileparams = await this.downloadLink(payload.link)
+                await this.uncompressFile(fileparams["type"], fileparams["path"], destPath)
+                await fs.unlink(fileparams["path"])
             }
             const check = await this.stt.checkModel(payload.modelId, 'am')
             if (check) {
