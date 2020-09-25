@@ -1,3 +1,6 @@
+# 1.1.6
+- Update the parameters and fix download from link issue
+
 # 1.1.5
 - Change LinSTT service reload and Traefik Label parameters
 
