@@ -13,7 +13,7 @@ class DockerSwarm {
             "Name": params.serviceId,
             "TaskTemplate": {
                 "ContainerSpec": {
-                    "Image": params.image,
+                    "Image": `${params.image}:${process.env.LINSTT_IMAGE_TAG}`,
                     "Mounts": [
                         {
                             "ReadOnly": false,
