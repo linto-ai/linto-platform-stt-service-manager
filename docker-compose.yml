@@ -3,7 +3,7 @@ version: '3.5'
 services:
 
   stt-service-manager:
-    image: lintoai/linto-platform-stt-server-manager:latest
+    image: lintoai/linto-platform-stt-server-manager:latest-unstable
     depends_on:
       - mongodb-stt-service-manager
     volumes:

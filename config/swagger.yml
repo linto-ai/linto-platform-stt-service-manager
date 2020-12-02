@@ -72,6 +72,14 @@ parameters:
       type: "string"
       pattern: '[a-zA-ZàâçèéêîôùûÀÂÇÈÉÊÎÔÙÛ0-9_\-]*[a-zA-ZàâçèéêîôùûÀÂÇÈÉÊÎÔÙÛ0-9]$'
 
+    api-access-req:
+        name: "externalAccess"
+        in: "formData"
+        description: "Allow external access to the service API"
+        required: true
+        type: "string"
+        enum: [ "", "yes", "no" ]
+
     replicas:
         name: "replicas"
         in: formData
@@ -351,6 +359,7 @@ paths:
       - "application/json"
       parameters:
       - $ref: '#/parameters/service/serviceId-req'
+      - $ref: '#/parameters/service/api-access-req'
       responses:
         200:
           description: success

@@ -16,9 +16,10 @@ module.exports = function () {
         })
         this.app.components['ClusterManager'].on('serviceStopped', async (serviceId) => {
             try {
-                this.ingress.removeUpStream(serviceId)
-                debug(`Reload nginx service ${process.env.NGINX_SERVICE_ID}`)
-                await this.ingress.reloadNginx()
+                if (this.ingress.removeUpStream(serviceId)) {
+                    debug(`Reload nginx service ${process.env.NGINX_SERVICE_ID}`)
+                    await this.ingress.reloadNginx()
+                }
             } catch (err) {
                 console.error(err)
             }
@@ -36,7 +37,10 @@ module.exports = function () {
     if (process.env.INGRESS_CONTROLLER == "traefik") {
         this.app.components['ClusterManager'].on('serviceStarted', async (info) => {
             try {
-                await this.ingress.addLabels(info.service, info.tag)
+                if (info.tag == 'offline')
+                    await this.ingress.addLabels(info.service, process.env.LINSTT_OFFLINE_IMAGE)
+                else
+                    await this.ingress.addLabels(info.service, process.env.LINSTT_STREAMING_IMAGE)                
             } catch (err) {
                 console.error(err)
             }

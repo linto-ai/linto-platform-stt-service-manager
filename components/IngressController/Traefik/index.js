@@ -5,7 +5,7 @@ const docker = new Docker({ socketPath: process.env.DOCKER_SOCKET_PATH });
 class Traefik {
     constructor() {
     }
-    async addLabels(serviceId, tag) {
+    async addLabels(serviceId, serviceImage) {
         return new Promise(async (resolve, reject) => {
             try {
                 const service = await docker.getService(serviceId)
@@ -27,7 +27,7 @@ class Traefik {
                 newSpec.Labels[ruleLable] = `Host(\`${process.env.LINTO_STACK_DOMAIN}\`) && PathPrefix(\`${prefix}\`)`
 
                 //stack params
-                newSpec.Labels["com.docker.stack.image"] = `${process.env.LINSTT_IMAGE}:${tag}`
+                newSpec.Labels["com.docker.stack.image"] = `${serviceImage}:${process.env.LINSTT_IMAGE_TAG}`
                 newSpec.Labels["com.docker.stack.namespace"] = process.env.LINTO_STACK_NAME
 
                 //middlewares

@@ -44,7 +44,7 @@ class Nginx {
             }
 
             // Add location
-            const prefix= `/${process.env.LINSTT_PREFIX}/${config.service}`
+            const prefix = `/${process.env.LINSTT_PREFIX}/${config.service}`
 
             if (this.conf.nginx.server.location === undefined) {
                 this.conf.nginx.server._add('location', `${prefix}/`);
@@ -74,30 +74,40 @@ class Nginx {
     }
 
     removeUpStream(serviceId) {
-        //Remove upstream
         try {
-            if (Array.isArray(this.conf.nginx.upstream)) {
-                this.conf.nginx.upstream.forEach((upstream, idx) => {
-                    if (upstream._getString().indexOf(serviceId) != -1) {
-                        this.conf.nginx._remove('upstream', idx)
+            //Remove upstream
+            let findService = false
+            if (this.conf.nginx.upstream != undefined) {
+                if (Array.isArray(this.conf.nginx.upstream)) {
+                    this.conf.nginx.upstream.forEach((upstream, idx) => {
+                        if (upstream._getString().indexOf(serviceId) != -1) {
+                            this.conf.nginx._remove('upstream', idx)
+                            findService = true
+                        }
+                    });
+                } else {
+                    if (this.conf.nginx.upstream._getString().indexOf(serviceId) != -1) {
+                        this.conf.nginx._remove('upstream')
+                        findService = true
                     }
-                });
-            } else {
-                if (this.conf.nginx.upstream._getString().indexOf(serviceId) != -1)
-                    this.conf.nginx._remove('upstream')
+                }
             }
 
             //Remove location
-            if (Array.isArray(this.conf.nginx.server.location)) {
-                this.conf.nginx.server.location.forEach((location, idx) => {
-                    if (location._getString().indexOf(serviceId) != -1) {
-                        this.conf.nginx.server._remove('location', idx)
-                    }
-                });
-            } else {
-                if (this.conf.nginx.server.location._getString().indexOf(serviceId) != -1)
-                    this.conf.nginx.server._remove('location')
+            if (this.conf.nginx.server.location != undefined) {
+                if (Array.isArray(this.conf.nginx.server.location)) {
+                    this.conf.nginx.server.location.forEach((location, idx) => {
+                        if (location._getString().indexOf(serviceId) != -1) {
+                            this.conf.nginx.server._remove('location', idx)
+                        }
+                    });
+                } else {
+                    if (this.conf.nginx.server.location._getString().indexOf(serviceId) != -1)
+                        this.conf.nginx.server._remove('location')
+                }
             }
+
+            return findService
         } catch (err) {
             console.error(err)
         }
@@ -117,7 +127,7 @@ class Nginx {
                         await sleep(time * 1000)
                         await service.update(newSpec)
                         break
-                    } catch(err){
+                    } catch (err) {
                         debug("Service nginx update stopped due to another update process! Retry...")
                     }
                 }
@@ -139,7 +149,7 @@ class Nginx {
                         //"label":[`com.docker.swarm.service.name=${process.env.NGINX_SERVICE_ID}`]
                     }
                 })
-                if (nginx.length == 0) throw('Service Nginx is not running!!!')
+                if (nginx.length == 0) throw ('Service Nginx is not running!!!')
                 const nginx_id = nginx[0].Names[0].replace('/', '')
                 const container = await docker.getContainer(nginx_id)
                 container.exec({
