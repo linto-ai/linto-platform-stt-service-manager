@@ -14,6 +14,7 @@ class App {
             }, Promise.resolve()).then(() => {
                 // Do some stuff after all components being loaded
                 this.components['ClusterManager'].emit('verifServices')
+                this.components['ClusterManager'].emit('cleanServices')
             })
         } catch (e) {
             console.error(debug.namespace, e)
