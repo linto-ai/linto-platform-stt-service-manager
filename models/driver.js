@@ -19,7 +19,7 @@ class MongoDriver {
     // Check mongo database connection status
     static checkConnection() {
         try {
-            if (!!MongoDriver.db && MongoDriver.db.serverConfig) {
+            if (MongoDriver.db && MongoDriver.db.serverConfig) {
                 return MongoDriver.db.serverConfig.isConnected()
             } else {
                 return false
