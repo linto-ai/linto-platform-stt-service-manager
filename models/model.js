@@ -1,6 +1,4 @@
 const MongoDriver = require(`${process.cwd()}/models/driver.js`)
-if (!MongoDriver.db)
-    throw 'error Mongodb connexion'
 
 class MongoModel {
     constructor(collection) {

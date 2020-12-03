@@ -6,7 +6,6 @@ class App {
         try {
             // Load env variables
             require('./config')
-            require(`${process.cwd()}/models/model.js`)
             // Auto-loads components based on process.env.COMPONENTS list
             this.components = {}
             this.db = {}
