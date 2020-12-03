@@ -14,11 +14,12 @@ module.exports = function () {
                             await this.cluster.startService(service)
                             //const check = await this.cluster.checkServiceOn(service)
                             const check = true
-                            if (check) {
+                            if (check && service.externalAccess) {
                                 this.emit("serviceStarted", { service: service.serviceId, tag: service.tag })
                             }
                         } else {
-                            this.emit("serviceStarted", { service: service.serviceId, tag: service.tag })
+                            if (service.externalAccess)
+                                this.emit("serviceStarted", { service: service.serviceId, tag: service.tag })
                         }
                     } else { //
                         const replicas = await this.cluster.serviceIsOn(service.serviceId)

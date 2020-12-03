@@ -15,6 +15,7 @@ class ServiceUpdates extends MongoModel {
             replicas: obj.replicas,
             LModelId: obj.LModelId,
             AModelId: obj.AModelId,
+            externalAccess: obj.externalAccess,
             lang: obj.lang,
             isOn: 0,
             date: datetime.create().format('m/d/Y-H:M:S')

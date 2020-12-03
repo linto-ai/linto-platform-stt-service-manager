@@ -263,6 +263,7 @@ paths:
       - $ref: '#/parameters/service/replicas-req'
       - $ref: '#/parameters/service/tag-req'
       - $ref: '#/parameters/service/LM-req'
+      - $ref: '#/parameters/service/api-access-req'
       responses:
         200:
           description: success
@@ -279,6 +280,7 @@ paths:
       - $ref: '#/parameters/service/replicas'
       - $ref: '#/parameters/service/tag'
       - $ref: '#/parameters/service/LM'
+      - $ref: '#/parameters/service/api-access-req'
       responses:
         200:
           description: success
@@ -359,7 +361,6 @@ paths:
       - "application/json"
       parameters:
       - $ref: '#/parameters/service/serviceId-req'
-      - $ref: '#/parameters/service/api-access-req'
       responses:
         200:
           description: success

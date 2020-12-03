@@ -1,3 +1,5 @@
+# 1.2.0
+- New feature: allow or deny external access to a running service
 # 1.1.4
 - Fix minor bugs and update the environment variables for better usability
 

@@ -18,18 +18,11 @@ module.exports = function () {
             if (!lmodel) throw `Language Model used by this service has been removed`
             if (!lmodel.isGenerated) throw `Service '${payload.serviceId}' could not be started (Language Model '${service.LModelId}' has not been generated yet)`
 
-            if (payload.externalAccess == undefined) throw 'Undefined field \'externalAccess\' (required)'
-            if (payload.externalAccess.toLowerCase() != "yes" && payload.externalAccess.toLowerCase() != "no") throw 'Unrecognized \'externalAccess\'. Supported values are: yes|no'
-            
-            let externalAccess = false
-            if (payload.externalAccess.toLowerCase() == "yes")
-                externalAccess = true
-
             await this.cluster.startService(service)
             //const check = await this.cluster.checkServiceOn(service)
             const check = true
             if (check) {
-                if (externalAccess)
+                if (service.externalAccess)
                     this.emit("serviceStarted", { service: payload.serviceId, tag: service.tag })
                 await this.db.service.updateService(payload.serviceId, { isOn: 1 })
             }
@@ -56,7 +49,8 @@ module.exports = function () {
             await this.cluster.stopService(serviceId)
             //await this.cluster.checkServiceOff(serviceId)
             await this.db.service.updateService(serviceId, { isOn: 0 })
-            this.emit("serviceStopped", serviceId)
+            if (service.externalAccess)
+                this.emit("serviceStopped", serviceId)
             return cb({ bool: true, msg: `Service '${serviceId}' is successfully stopped` })
         } catch (err) {
             return cb({ bool: false, msg: err })
