@@ -16,12 +16,12 @@ module.exports = function () {
                             //const check = await this.cluster.checkServiceOn(service)
                             const check = true
                             if (check && service.externalAccess) {
-                                this.emit("serviceStarted", { service: service.serviceId, tag: service.tag })
+                                this.emit("serviceStarted", { service: service.serviceId })
                             }
                             debug(`**** Service ${service.serviceId} is restarted`)
                         } else {
                             if (service.externalAccess)
-                                this.emit("serviceStarted", { service: service.serviceId, tag: service.tag })
+                                this.emit("serviceStarted", { service: service.serviceId })
                         }
                     } else { //
                         const replicas = await this.cluster.serviceIsOn(service.serviceId)
@@ -43,7 +43,7 @@ module.exports = function () {
             const models = await this.db.lm.findModels()
             if (models !== -1) {
                 models.forEach(async model => {
-                    if (model.updateState > 0 ) { //check if service crashed during model generation
+                    if (model.updateState > 0) { //check if service crashed during model generation
                         let update = {}
                         update['updateState'] = 0
                         update['updateStatus'] = ''

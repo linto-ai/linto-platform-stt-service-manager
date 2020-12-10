@@ -37,10 +37,7 @@ module.exports = function () {
     if (process.env.INGRESS_CONTROLLER == "traefik") {
         this.app.components['ClusterManager'].on('serviceStarted', async (info) => {
             try {
-                if (info.tag == 'offline')
-                    await this.ingress.addLabels(info.service, process.env.LINSTT_OFFLINE_IMAGE)
-                else
-                    await this.ingress.addLabels(info.service, process.env.LINSTT_STREAMING_IMAGE)                
+                await this.ingress.addLabels(info.service)                
             } catch (err) {
                 console.error(err)
             }

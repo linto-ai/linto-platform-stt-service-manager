@@ -63,6 +63,7 @@ function configureDefaults() {
         process.env.LINSTT_PREFIX = ifHas(process.env.LINTO_STACK_LINSTT_PREFIX, envdefault.LINTO_STACK_LINSTT_PREFIX)
         process.env.LINSTT_PREFIX = process.env.LINSTT_PREFIX.replace(/\//g,"")
         process.env.LINSTT_IMAGE_TAG = ifHas(process.env.LINTO_STACK_IMAGE_TAG, envdefault.LINTO_STACK_IMAGE_TAG)
+        process.env.LINSTT_STACK_NAME = ifHas(process.env.LINTO_STACK_LINSTT_NAME, envdefault.LINTO_STACK_LINSTT_NAME)
 
         //parameter used when traefik is activated
         process.env.LINTO_STACK_DOMAIN = ifHas(process.env.LINTO_STACK_DOMAIN, envdefault.LINTO_STACK_DOMAIN)

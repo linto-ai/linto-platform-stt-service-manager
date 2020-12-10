@@ -23,7 +23,7 @@ module.exports = function () {
             const check = true
             if (check) {
                 if (service.externalAccess)
-                    this.emit("serviceStarted", { service: payload.serviceId, tag: service.tag })
+                    this.emit("serviceStarted", { service: payload.serviceId })
                 await this.db.service.updateService(payload.serviceId, { isOn: 1 })
             }
             else {
