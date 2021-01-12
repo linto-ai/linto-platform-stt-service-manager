@@ -20,12 +20,22 @@ module.exports = function () {
             if (payload.languageModel == undefined) throw 'Undefined field \'languageModel\' (required)'
             const lmodel = await this.db.lm.findModel(payload.languageModel)
             if (!lmodel) throw `Language Model '${payload.languageModel}' does not exist`
+
+            if (payload.externalAccess == undefined) throw 'Undefined field \'externalAccess\' (required)'
+            if (payload.externalAccess.toLowerCase() != "yes" && payload.externalAccess.toLowerCase() != "no") throw 'Unrecognized \'externalAccess\'. Supported values are: yes|no'
+
+            let externalAccess = 0
+            if (payload.externalAccess.toLowerCase() == "yes")
+                externalAccess = 1
+
+
             const request = {
                 serviceId: payload.serviceId,
                 tag: payload.tag,
                 replicas: parseInt(payload.replicas),
                 LModelId: lmodel.modelId,
                 AModelId: lmodel.acmodelId,
+                externalAccess: externalAccess,
                 lang: lmodel.lang
             }
             await this.db.service.createService(request)
@@ -60,6 +70,13 @@ module.exports = function () {
                 if (!lmodel) throw `Language Model '${payload.languageModel}' does not exist`
                 update.LModelId = lmodel.modelId
                 update.AModelId = lmodel.acmodelId
+            }
+
+            if (payload.externalAccess != undefined) {
+                if (payload.externalAccess.toLowerCase() != "yes" && payload.externalAccess.toLowerCase() != "no") throw 'Unrecognized \'externalAccess\'. Supported values are: yes|no'
+                update.externalAccess = 0
+                if (payload.externalAccess.toLowerCase() == "yes")
+                    update.externalAccess = 1
             }
 
             await this.db.service.updateService(payload.serviceId, update)

@@ -1,3 +1,6 @@
+# 1.2.0
+- New feature: allow or deny external access to a running service
+
 # 1.1.6
 - Update the parameters and fix download from link issue
 

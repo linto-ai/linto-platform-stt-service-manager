@@ -11,6 +11,10 @@ class DockerSwarm {
     serviceOption(params) {
         return {
             "Name": params.serviceId,
+            "Labels": {
+                "com.docker.stack.image" : `${params.image}:${process.env.LINSTT_IMAGE_TAG}`,
+                "com.docker.stack.namespace" : `${process.env.LINSTT_STACK_NAME}`
+            },
             "TaskTemplate": {
                 "ContainerSpec": {
                     "Image": `${params.image}:${process.env.LINSTT_IMAGE_TAG}`,

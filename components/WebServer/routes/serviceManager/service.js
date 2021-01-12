@@ -49,7 +49,8 @@ module.exports = (webserver) => {
         requireAuth: false,
         controller:
             (req, res, next) => {
-                webserver.emit("startService", (ans) => { answer(ans, res) }, req.params.serviceId)
+                req.body.serviceId = req.params.serviceId
+                webserver.emit("startService", (ans) => { answer(ans, res) }, req.body)
             }
     },
     {

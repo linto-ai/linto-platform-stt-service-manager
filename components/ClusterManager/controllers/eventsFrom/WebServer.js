@@ -4,33 +4,33 @@ const debug = require('debug')(`app:dockerswarm:eventsFrom:WebServer`)
 module.exports = function () {
     if (!this.app.components['WebServer']) return
 
-    this.app.components['WebServer'].on('startService', async (cb, serviceId) => {
+    this.app.components['WebServer'].on('startService', async (cb, payload) => {
         /**
           * Create a docker service by service Object
-          * @param serviceId
+          * @param {Object} payload: {serviceId, externalAccess}
           * @returns {Object}
         */
         try {
-            const service = await this.db.service.findService(serviceId)
-            if (!service) throw `Service '${serviceId}' does not exist`
-            if (service.isOn) throw `Service '${serviceId}' is already started`
+            const service = await this.db.service.findService(payload.serviceId)
+            if (!service) throw `Service '${payload.serviceId}' does not exist`
+            if (service.isOn) throw `Service '${payload.serviceId}' is already started`
             const lmodel = await this.db.lm.findModel(service.LModelId)
             if (!lmodel) throw `Language Model used by this service has been removed`
-            if (!lmodel.isGenerated) throw `Service '${serviceId}' could not be started (Language Model '${service.LModelId}' has not been generated yet)`
-
+            if (!lmodel.isGenerated) throw `Service '${payload.serviceId}' could not be started (Language Model '${service.LModelId}' has not been generated yet)`
 
             await this.cluster.startService(service)
             //const check = await this.cluster.checkServiceOn(service)
             const check = true
             if (check) {
-                this.emit("serviceStarted", { service: serviceId, tag: service.tag })
-                await this.db.service.updateService(serviceId, { isOn: 1 })
+                if (service.externalAccess)
+                    this.emit("serviceStarted", { service: payload.serviceId })
+                await this.db.service.updateService(payload.serviceId, { isOn: 1 })
             }
             else {
-                await this.cluster.stopService(serviceId)
-                throw `Something went wrong. Service '${serviceId}' is not started`
+                await this.cluster.stopService(payload.serviceId)
+                throw `Something went wrong. Service '${payload.serviceId}' is not started`
             }
-            return cb({ bool: true, msg: `Service '${serviceId}' is successfully started` })
+            return cb({ bool: true, msg: `Service '${payload.serviceId}' is successfully started` })
         } catch (err) {
             return cb({ bool: false, msg: err })
         }
@@ -49,7 +49,8 @@ module.exports = function () {
             await this.cluster.stopService(serviceId)
             //await this.cluster.checkServiceOff(serviceId)
             await this.db.service.updateService(serviceId, { isOn: 0 })
-            this.emit("serviceStopped", serviceId)
+            if (service.externalAccess)
+                this.emit("serviceStopped", serviceId)
             return cb({ bool: true, msg: `Service '${serviceId}' is successfully stopped` })
         } catch (err) {
             return cb({ bool: false, msg: err })
