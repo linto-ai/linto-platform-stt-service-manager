@@ -70,10 +70,12 @@ nano .env
 |LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_REQUIRE_LOGIN|Enable/Disable MongoDb service authentication|true|
 |LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_USER|MongoDb service username|root|
 |LINTO_STACK_STT_SERVICE_MANAGER_MONGODB_PSWD|MongoDb service password user|root|
-|LINTO_STACK_LINSTT_IMAGE|LinSTT docker image to use|lintoai/linto-platform-stt-standalone-worker|
+|LINTO_STACK_LINSTT_OFFLINE_IMAGE|LinSTT docker image to use for offline decoding mode|lintoai/linto-platform-stt-standalone-worker|
+|LINTO_STACK_LINSTT_STREAMING_IMAGE|LinSTT docker image to use for online decoding mode|lintoai/linto-platform-stt-standalone-worker-streaming|
 |LINTO_STACK_LINSTT_NETWORK|LinSTT docker network to connect|linto-net|
 |LINTO_STACK_LINSTT_PREFIX|LinSTT service prefix to use with controller ingress|stt|
-
+|LINTO_STACK_IMAGE_TAG|Docker image tag to use|latest|
+|LINTO_STACK_LINSTT_NAME|Docker stack name|stt|
 
 If you run STT-manager without docker, you need to change the following environment variables:
 
