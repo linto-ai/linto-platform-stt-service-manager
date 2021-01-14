@@ -1,4 +1,6 @@
-const debug = require('debug')(`app:dockerswarm:eventsFrom:myself`)
+const debug = require('debug')(`app:dockerswarm:eventsFrom:clusterManager:myself`)
+const fs = require('fs')
+const rimraf = require("rimraf");
 
 // this is bound to the component
 module.exports = function () {
@@ -52,6 +54,14 @@ module.exports = function () {
                     }
                 })
             }
+            //remove crashed files if exists
+            fs.readdir(process.env.TEMP_FILE_PATH, (err, files) => {
+                files.forEach(file => {
+                    const path = `${process.env.TEMP_FILE_PATH}/${file}`
+                    debug(`**** remove tmp file ${path} after a service's crash`);
+                    rimraf(path, async (err) => { if (err) throw err })
+                });
+            });
         } catch (err) {
             console.error(err)
             throw err
